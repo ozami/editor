@@ -1,0 +1,119 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  position: relative;
+}
+
+header {
+  background: #eeeeee;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 35px;
+}
+#finder {
+  padding: 5px;
+}
+#finder-path {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  letter-spacing: 1px;
+  font-size: 14px;
+  padding-left: 5px;
+}
+
+#finder-items {
+  z-index: 100;
+  visibility: hidden;
+  font-size: 14px;
+  position: absolute;
+  background: #fff;
+  width: 200px;
+  border: 1px solid #999;
+  letter-spacing: 1px;
+  margin-top: 2px;
+  max-height: 250px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+#finder-items a {
+  display: block;
+  line-height: 24px;
+  height: 24px;
+  padding: 0px 10px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+#finder-items a:hover {
+  background: #ddd;
+}
+
+main {
+  position: absolute;
+  top: 36px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-top: 1px solid #ccc;
+}
+
+#files {
+  background: #eee;
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 250px;
+  border-right: 1px solid #ccc;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+#files .file-item {
+  display: block;
+  cursor: pointer;
+  padding: 5px 10px;
+}
+#files .file-item.active,
+#files .file-item:hover {
+  background: #ddd;
+}
+
+#files .file-item .dir {
+  display: block;
+  color: #666;
+  font-size: 9px;
+  white-space: nowrap;
+  margin-bottom: 1px;
+}
+#files .file-item .name {
+  display: block;
+  font-size: 12px;
+  white-space: nowrap;
+  letter-spacing: 1px;
+}
+
+#editors {
+  background: #eee;
+  position: absolute;
+  top: 0;
+  left: 250px;
+  right: 0;
+  bottom: 0;
+}
+.editor, .editor .CodeMirror {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+}
