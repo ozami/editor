@@ -103,8 +103,15 @@ $(function() {
       }
       var editor = $("<div>").addClass("editor").appendTo("#editors");
       var code_mirror = CodeMirror(editor[0], {
-        theme: "abcdef",
-        value: reply.content
+        //theme: "abcdef",
+        value: reply.content,
+        lineNumbers: true,
+        tabSize: 4,
+        indentUnit: 4,
+        autoCloseBrackets: true,
+        matchBrackets: true,
+        matchTags: true,
+        autoCloseTags: true,
       });
     });
   };
@@ -143,4 +150,8 @@ $(function() {
   };
   var file_manager = new FileManager();
   
+  // shortcut keys
+  shortcut.add("Ctrl+O", function() {
+    $("#finder-path").focus();
+  });
 });
