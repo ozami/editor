@@ -116,4 +116,11 @@ main {
   right: 0;
   bottom: 0;
   height: 100%;
+  width: 100%;
+}
+.editor {
+  z-index: -100;
+}
+.editor.active {
+  z-index: 1;
 }

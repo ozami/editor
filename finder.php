@@ -1,9 +1,8 @@
 <?php
-$root = "/";
-$path = ltrim($_REQUEST["path"], "/");
-if (is_dir($root . $path)) {
+$path = $_REQUEST["path"];
+if (is_dir($path)) {
   $dir = rtrim($path, "/");
-  $items = scandir($root . $path);
+  $items = scandir($path);
   $stats = [];
   foreach ($items as $i) {
     if ($i == "." || $i == "..") {
@@ -11,19 +10,19 @@ if (is_dir($root . $path)) {
     }
     $stats[] = [
       "name" => $i,
-      "dir" => is_dir("$root$path/$i")
+      "dir" => is_dir("path/$i")
     ];
   }
 } else {
   $stats = [];
   $dir = dirname($path);
-  if (is_dir($root . $dir)) {
-    $basename = basename($root . $path);
-    foreach (scandir($root . $dir) as $i) {
+  if (is_dir($dir)) {
+    $basename = basename($path);
+    foreach (scandir($dir) as $i) {
       if (strpos($i, $basename) === 0) {
         $stats[] = [
           "name" => $i,
-          "dir" => is_dir("$root$dir/$i")
+          "dir" => is_dir("$dir/$i")
          ];
       }
     }
