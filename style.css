@@ -145,6 +145,9 @@ main {
   box-sizing: border-box;
   border-bottom: 36px solid transparent;
 }
+.editor .CodeMirror pre {
+  line-height: 1.75;
+}
 .editor .CodeMirror-cursor {
   border-left-width: 3px !important;
 }
