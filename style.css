@@ -81,6 +81,7 @@ main {
   display: block;
   cursor: pointer;
   padding: 5px 10px;
+  position: relative;
 }
 #files .file-item.active,
 #files .file-item:hover {
