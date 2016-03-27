@@ -35,7 +35,7 @@ header {
   font-size: 14px;
   position: absolute;
   background: #fff;
-  width: 200px;
+  width: 250px;
   border: 1px solid #999;
   letter-spacing: 1px;
   margin-top: 2px;
@@ -71,7 +71,7 @@ main {
   top: 0;
   left: 0;
   bottom: 0;
-  width: 250px;
+  width: 200px;
   border-right: 1px solid #ccc;
   overflow-y: auto;
   overflow-x: hidden;
@@ -93,6 +93,7 @@ main {
   font-size: 9px;
   white-space: nowrap;
   margin-bottom: 1px;
+  letter-spacing: 1px;
 }
 #files .file-item .name {
   display: block;
@@ -105,7 +106,7 @@ main {
   background: #eee;
   position: absolute;
   top: 0;
-  left: 250px;
+  left: 200px;
   right: 0;
   bottom: 0;
 }
