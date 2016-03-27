@@ -10,7 +10,7 @@ if (is_dir($path)) {
     }
     $stats[] = [
       "name" => $i,
-      "dir" => is_dir("path/$i")
+      "dir" => is_dir("$path/$i")
     ];
   }
 } else {

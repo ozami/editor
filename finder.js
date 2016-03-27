@@ -17,7 +17,7 @@ var Finder = function() {
     if (!path_has_focus && items_visible) {
       self.hideSuggest();
     }
-  }, 100);
+  }, 300);
 
   // open file
   $("#finder").submit(function(e) {
@@ -31,6 +31,9 @@ var Finder = function() {
   this.items.on("click", "a", function(e) {
     self.path.val($(e.target).data("path"));
     self.hideSuggest();
+    if (!$(e.target).data("dir")) {
+      $("#finder").submit();
+    }
   });
 };
 Finder.prototype.showSuggest = function() {
@@ -73,7 +76,7 @@ Finder.prototype.fetchSuggest = function(path) {
         name += "/";
       }
       $("#finder-items").append(
-        $("<a>").text(name).data("path", reply.base + "/" + name)
+        $("<a>").text(name).data("path", reply.base + "/" + name).data("dir", item.dir)
       );
     });
     $("#finder-items").scrollTop(0).css({visibility: "visible"});
