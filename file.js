@@ -32,6 +32,7 @@ FileManager.prototype.activate = function(path) {
   $("#files .file-item.active").removeClass("active");
   file.addClass("active");
   editor_manager.activate(path);
+  finder.setPath(path);
   return true;
 };
 FileManager.prototype.nextFile = function() {
@@ -50,9 +51,7 @@ FileManager.prototype.rotateFile = function(next) {
       return;
     }
   }
-  $("#files .file-item.active").removeClass("active");
-  target.addClass("active");
-  editor_manager.activate(target.data("path"));
+  this.activate(target.data("path"));
 };
 
 

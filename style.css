@@ -119,8 +119,8 @@ main {
   width: 100%;
 }
 .editor {
-  z-index: -100;
+  display: none;
 }
 .editor.active {
-  z-index: 1;
+  display: block;
 }

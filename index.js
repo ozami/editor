@@ -1,6 +1,6 @@
 (function() {
   // shortcut keys
-  Mousetrap.bind("ctrl+o", function() {
+  Mousetrap.bind(["ctrl+o", "ctrl+p"], function() {
     $("#finder-path").focus();
     return false;
   });

@@ -1,13 +1,20 @@
 <!doctype html>
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="/style.css">
-<link rel="stylesheet" type="text/css" href="/codemirror.css">
+  <meta charset="utf-8">
+  <title>Editor</title>
+	<link rel="stylesheet" type="text/css" href="/style.css">
+	<link rel="stylesheet" type="text/css" href="/codemirror.css">
+  <style>
+    .CodeMirror pre {
+      line-height: 1.75;
+    }
+  </style>
 </head>
 <body>
 <header>
 <form id="finder">
-<input type="text" id="finder-path" autocomplete="off">
+<input type="text" id="finder-path" class="mousetrap" autocomplete="off">
 <div id="finder-items">
 </div>
 </form>

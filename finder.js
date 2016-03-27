@@ -85,4 +85,9 @@ Finder.prototype.hideSuggest = function() {
   clearInterval(self.path_watcher);
   self.path_watcher = null;
 };
+Finder.prototype.setPath = function(path) {
+  this.path.val(path);
+  this.last_path = path;
+  localStorage.setItem("finder-path", path);
+}
 var finder = new Finder();

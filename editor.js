@@ -24,6 +24,7 @@ EditorManager.prototype.open = function(path) {
           lineNumbers: true,
           tabSize: 2,
           indentUnit: 2,
+          showCursorWhenSelecting: true,
           autoCloseBrackets: true,
           matchBrackets: true,
           matchTags: true,
