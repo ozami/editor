@@ -17,7 +17,10 @@ EditorManager.prototype.open = function(path) {
         return;
       }
       var editor = $("<div>").addClass("editor").appendTo("#editors");
-      var mode = CodeMirror.findModeByExtension(path.replace(/.*[.](.+)$/, "$1"));
+      var mode = CodeMirror.findModeByExtension(path.replace(/.*[.](.+)$/, "$1")) || {
+        mode: "text",
+        mime: "text/plain"
+      };
       CodeMirror.requireMode(mode.mode, function() {
         var code_mirror = CodeMirror(editor[0], {
           value: reply.content,
