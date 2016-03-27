@@ -21,7 +21,6 @@ EditorManager.prototype.open = function(path) {
       CodeMirror.requireMode(mode.mode, function() {
         var code_mirror = CodeMirror(editor[0], {
           value: reply.content,
-//          inputStyle: "contenteditable",
           lineNumbers: true,
           tabSize: 2,
           indentUnit: 2,
@@ -31,11 +30,12 @@ EditorManager.prototype.open = function(path) {
           autoCloseTags: true,
           mode: mode.mime,
         });
+        $(code_mirror.getInputField()).addClass("mousetrap"); // enable hotkey
         editor.data("path", path);
         editor.data("code_mirror", code_mirror);
         
         // save
-        shortcut.add("Ctrl+S", function() {
+        Mousetrap(editor[0]).bind("ctrl+s", function() {
           $.ajax({
             url: "/write.php",
             method: "post",
@@ -47,7 +47,8 @@ EditorManager.prototype.open = function(path) {
           }).done(function() {
           }).fail(function() {
           });
-        }, {target: editor[0]});
+          return false;
+        });
 
         resolve();
       });
