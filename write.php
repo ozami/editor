@@ -7,4 +7,4 @@ if (file_put_contents($path, $_REQUEST["content"]) === false) {
   ]);
   die();
 }
-echo "OK";
+echo json_encode("ok");

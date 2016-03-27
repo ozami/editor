@@ -17,7 +17,8 @@ FileManager.prototype.open = function(path) {
     var name = path.replace(new RegExp(".*/"), "");
     $("<div>").data("path", path).addClass("file-item").append(
       $("<div>").addClass("dir").text(dir),
-      $("<div>").addClass("name").text(name)
+      $("<div>").addClass("name").text(name),
+      $('<div class="status clean">')
     ).appendTo("#files");
     self.activate(path);
   });
@@ -53,6 +54,11 @@ FileManager.prototype.rotateFile = function(next) {
   }
   this.activate(target.data("path"));
 };
-
+FileManager.prototype.setStatus = function(path, status) {
+  var file = $("#files .file-item").filter(function(idx, item) {
+    return $(item).data("path") == path;
+  });
+  file.find(".status").removeClass("clean error modified").addClass(status);
+};
 
 var file_manager = new FileManager();

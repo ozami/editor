@@ -31,7 +31,18 @@ EditorManager.prototype.open = function(path) {
           autoCloseTags: true,
           mode: mode.mime,
         });
+        code_mirror.on("changes", function() {
+          file_manager.setStatus(
+            path,
+            code_mirror.isClean() ? "clean": "modified"
+          );
+        });
         $(code_mirror.getInputField()).addClass("mousetrap"); // enable hotkey
+        // status bar
+        editor.append(
+          $('<div class="editor-status">').append(
+          )
+        );
         editor.data("path", path);
         editor.data("code_mirror", code_mirror);
         
@@ -46,7 +57,10 @@ EditorManager.prototype.open = function(path) {
             },
             dataType: "json"
           }).done(function() {
+            file_manager.setStatus(path, "clean");
           }).fail(function() {
+            file_manager.setStatus(path, "error");
+            alert("Save failed.");
           });
           return false;
         });

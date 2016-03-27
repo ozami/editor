@@ -101,6 +101,28 @@ main {
   white-space: nowrap;
   letter-spacing: 1px;
 }
+#files .file-item .status {
+  display: inline-block;
+  position: absolute;
+  right: 5px;
+  top: 18px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  background: transparent;
+  width: 5px;
+  height: 5px;
+}
+#files .file-item .status.clean {
+  display: none;
+}
+#files .file-item .status.modified {
+  background: #fe3;
+  border-color: #cb0;
+}
+#files .file-item .status.error {
+  background: #d30;
+  border-color: #a10;
+}
 
 #editors {
   background: #eee;
@@ -119,9 +141,36 @@ main {
   height: 100%;
   width: 100%;
 }
+.editor .CodeMirror {
+  box-sizing: border-box;
+  border-bottom: 26px solid transparent;
+}
+.editor .CodeMirror-cursor {
+  border-left-width: 3px !important;
+}
+.editor .CodeMirror span.CodeMirror-matchingbracket {
+  background: #eef3fc;
+  border: 1px solid #58b;
+  border-radius: 2px;
+  color: #000;
+  margin-left: -1px;
+  margin-right: -1px;
+  margin-top: -1px;
+}
 .editor {
   display: none;
 }
 .editor.active {
   display: block;
+}
+.editor-status {
+  position: absolute;
+  height: 26px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #eee;
+  border-top: 1px solid #ccc;
+  box-sizing: border-box;
+  font-size: 88%;
 }
