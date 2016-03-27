@@ -143,7 +143,7 @@ main {
 }
 .editor .CodeMirror {
   box-sizing: border-box;
-  border-bottom: 26px solid transparent;
+  border-bottom: 36px solid transparent;
 }
 .editor .CodeMirror-cursor {
   border-left-width: 3px !important;
@@ -165,7 +165,8 @@ main {
 }
 .editor-status {
   position: absolute;
-  height: 26px;
+  height: 36px;
+  padding: 5px;
   left: 0;
   right: 0;
   bottom: 0;
