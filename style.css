@@ -151,7 +151,13 @@ main {
   line-height: 1.75;
 }
 .editor .CodeMirror-cursor {
-  border-left-width: 3px !important;
+  border-left-width: 2px !important;
+}
+.CodeMirror-selected {
+  background: #eee;
+}
+.CodeMirror-focused .CodeMirror-selected {
+  background: #ddeeff;
 }
 .editor .CodeMirror span.CodeMirror-matchingbracket {
   background: #eef3fc;
