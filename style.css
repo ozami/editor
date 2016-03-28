@@ -51,6 +51,7 @@ header {
   white-space: nowrap;
   cursor: pointer;
 }
+#finder-items a.active,
 #finder-items a:hover {
   background: #ddd;
 }

@@ -75,13 +75,19 @@ EditorManager.prototype.open = function(path) {
     });
   });
 };
-EditorManager.prototype.activate = function(path) {
-  $("#editors .editor.active").removeClass("active");
-  var found = $("#editors .editor").filter(function() {
+EditorManager.prototype.get = function(path) {
+  return $("#editors .editor").filter(function() {
     return $(this).data("path") == path;
   });
+};
+EditorManager.prototype.activate = function(path) {
+  $("#editors .editor.active").removeClass("active");
+  var found = this.get(path);
   found.addClass("active");
   found.data("code_mirror").focus();
   found.data("code_mirror").refresh();
+};
+EditorManager.prototype.close = function(path) {
+  this.get(path).remove();
 };
 var editor_manager = new EditorManager();

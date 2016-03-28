@@ -5,6 +5,10 @@ var FileManager = function() {
     e.preventDefault();
     self.open($(e.currentTarget).data("path"));
   });
+  Mousetrap.bind("ctrl+k", function() {
+    self.close(self.getActive());
+    return false;
+  }, 'keydown');
 };
 FileManager.prototype.open = function(path) {
   var self = this;
@@ -23,10 +27,16 @@ FileManager.prototype.open = function(path) {
     self.activate(path);
   });
 };
-FileManager.prototype.activate = function(path) {
-  var file = $("#files .file-item").filter(function(idx, item) {
+FileManager.prototype.get = function(path) {
+  return $("#files .file-item").filter(function(idx, item) {
     return $(item).data("path") == path;
   });
+};
+FileManager.prototype.getActive = function() {
+  return $("#files .file-item.active").data("path");
+};
+FileManager.prototype.activate = function(path) {
+  var file = this.get(path);
   if (file.length == 0) {
     return false;
   }
@@ -60,5 +70,15 @@ FileManager.prototype.setStatus = function(path, status) {
   });
   file.find(".status").removeClass("clean error modified").addClass(status);
 };
-
+FileManager.prototype.close = function(path) {
+  var target = this.get(path);
+  if (target.length == 0) {
+    return;
+  }
+  if (target.hasClass("active")) {
+    this.prevFile();
+  }
+  target.remove();
+  editor_manager.close(path);
+};
 var file_manager = new FileManager();

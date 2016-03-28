@@ -22,19 +22,50 @@ var Finder = function() {
   // open file
   $("#finder").submit(function(e) {
     e.preventDefault();
-    file_manager.open(self.path.val());
+    var active = self.items.find("a.active");
+    if (active.length) {
+      self.selectItem(active);
+    }
+    else {
+      file_manager.open(self.path.val());
+    }
   });
   // when finder item selected
   this.items.on("mousedown", "a", function(e) {
     e.preventDefault();
   });
   this.items.on("click", "a", function(e) {
-    self.path.val($(e.target).data("path"));
-    self.hideSuggest();
-    if (!$(e.target).data("dir")) {
-      $("#finder").submit();
-    }
+    self.selectItem(e.target);
   });
+  // select item with up/down key
+  Mousetrap(this.path[0]).bind("down", function() {
+    self.moveSelect(true);
+    return false;
+  });
+  Mousetrap(this.path[0]).bind("up", function() {
+    self.moveSelect(false);
+    return false;
+  });
+};
+Finder.prototype.selectItem = function(item) {
+  item = $(item);
+  this.path.val(item.data("path"));
+  this.hideSuggest();
+  if (!item.data("dir")) {
+    file_manager.open(this.path.val());
+  }
+};
+Finder.prototype.moveSelect = function(down) {
+  var dir = down ? "next" : "prev";
+  var target = this.items.find("a.active")[dir]();
+  if (target.length == 0) {
+    target = this.items.find("a")[down ? "first" : "last"]();
+  }
+  this.items.find("a.active").removeClass("active");
+  target.addClass("active");
+  if (target.length) {
+    target[0].scrollIntoView();
+  }
 };
 Finder.prototype.showSuggest = function() {
   var self = this;
