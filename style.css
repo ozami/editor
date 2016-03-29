@@ -10,16 +10,20 @@ body {
   position: relative;
 }
 
-header {
+#finder {
   background: #eeeeee;
   position: absolute;
   left: 0;
   right: 0;
   top: 0;
-  height: 32px;
-}
-#finder {
+  height: auto;
+  display: none;
   padding: 4px;
+  z-index: 100;
+  border-bottom: 1px solid #ccc;
+}
+#finder.active {
+  display: block;
 }
 #finder-path {
   box-sizing: border-box;
@@ -59,11 +63,10 @@ header {
 
 main {
   position: absolute;
-  top: 32px;
+  top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  border-top: 1px solid #ccc;
 }
 
 #files {
@@ -149,6 +152,7 @@ main {
   border-bottom: 26px solid transparent;
 }
 .editor .CodeMirror pre {
+  font-family: "Source Han Code JP", monospace;
   line-height: 1.75;
 }
 .editor .CodeMirror-cursor {

@@ -8,17 +8,6 @@ var Finder = function() {
   this.path.val(this.last_path);
 
   // watch path input focus
-  setInterval(function() {
-    var path_has_focus = self.path.is(":focus");
-    var items_visible = self.items.css("visibility") == "visible";
-    if (path_has_focus && !items_visible) {
-      self.showSuggest();
-    }
-    if (!path_has_focus && items_visible) {
-      self.hideSuggest();
-    }
-  }, 300);
-
   // open file
   $("#finder").submit(function(e) {
     e.preventDefault();
@@ -37,6 +26,15 @@ var Finder = function() {
   this.items.on("click", "a", function(e) {
     self.selectItem(e.target);
   });
+  // show finder
+  Mousetrap.bind(["ctrl+o", "ctrl+p"], function() {
+    self.show();
+    self.path.focus();
+    return false;
+  });
+  self.path.blur(function() {
+    self.hide();
+  });
   // select item with up/down key
   Mousetrap(this.path[0]).bind("down", function() {
     self.moveSelect(true);
@@ -46,6 +44,18 @@ var Finder = function() {
     self.moveSelect(false);
     return false;
   });
+  Mousetrap(this.path[0]).bind("esc", function() {
+    self.hide();
+    return false;
+  });
+};
+Finder.prototype.show = function(item) {
+  $("#finder").addClass("active");
+  this.showSuggest();
+};
+Finder.prototype.hide = function(item) {
+  $("#finder").removeClass("active");
+  this.hideSuggest();
 };
 Finder.prototype.selectItem = function(item) {
   item = $(item);
