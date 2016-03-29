@@ -2,6 +2,7 @@
 var EditorManager = function() {
 };
 EditorManager.prototype.open = function(path) {
+  var self = this;
   return new Promise(function(resolve, reject) {
     $.ajax({
       method: "post",
@@ -21,18 +22,26 @@ EditorManager.prototype.open = function(path) {
         mode: "text",
         mime: "text/plain"
       };
+      // calc indent size
+      var indentUnit = self.calcIndentUnit(reply.content);
       CodeMirror.requireMode(mode.mode, function() {
         var code_mirror = CodeMirror(editor[0], {
           value: reply.content,
           lineNumbers: true,
-          tabSize: 2,
-          indentUnit: 2,
+          tabSize: indentUnit,
+          indentUnit: indentUnit,
           showCursorWhenSelecting: true,
           autoCloseBrackets: true,
           matchBrackets: true,
           matchTags: true,
           autoCloseTags: true,
           mode: mode.mime,
+        });
+        code_mirror.setOption("extraKeys", {
+          Tab: function(cm) {
+            var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
+            cm.replaceSelection(spaces);
+          }
         });
         code_mirror.on("changes", function() {
           file_manager.setStatus(
@@ -90,4 +99,14 @@ EditorManager.prototype.activate = function(path) {
 EditorManager.prototype.close = function(path) {
   this.get(path).remove();
 };
+EditorManager.prototype.calcIndentUnit = function(content) {
+  var lines = content.split(/[\r\n]+/);
+  for (var i = 0; i < lines.length; ++i) {
+    var indent = lines[i].replace(/^( *).*/, "$1");
+    if (indent.length == 2) {
+      return 2;
+    }
+  }
+  return 4;
+}
 var editor_manager = new EditorManager();
