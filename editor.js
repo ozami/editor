@@ -7,7 +7,7 @@ EditorManager.prototype.open = function(path) {
     $.ajax({
       method: "post",
       url: "/read.php",
-      timeout: 5000,
+      timeout: 3000,
       data: {
         path: path
       },
@@ -64,7 +64,7 @@ EditorManager.prototype.open = function(path) {
           $.ajax({
             url: "/write.php",
             method: "post",
-            timeout: 5000,
+            timeout: 3000,
             data: {
               path: path,
               content: code_mirror.getValue()

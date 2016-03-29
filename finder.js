@@ -98,6 +98,7 @@ Finder.prototype.fetchSuggest = function(path) {
   $.ajax({
     method: "post",
     url: "/finder.php",
+    timeout: 3000,
     data: {
       path: path
     },
