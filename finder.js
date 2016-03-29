@@ -7,17 +7,15 @@ var Finder = function() {
   
   this.path.val(this.last_path);
 
-  // watch path input focus
   // open file
-  $("#finder").submit(function(e) {
-    e.preventDefault();
+  Mousetrap(this.path[0]).bind("enter", function() {
     var active = self.items.find("a.active");
     if (active.length) {
       self.selectItem(active);
-    }
-    else {
+    } else {
       file_manager.open(self.path.val());
     }
+    return false;
   });
   // when finder item selected
   this.items.on("mousedown", "a", function(e) {
@@ -60,9 +58,9 @@ Finder.prototype.hide = function(item) {
 Finder.prototype.selectItem = function(item) {
   item = $(item);
   this.path.val(item.data("path"));
-  this.hideSuggest();
   if (!item.data("dir")) {
     file_manager.open(this.path.val());
+    this.hideSuggest();
   }
 };
 Finder.prototype.moveSelect = function(down) {
@@ -103,8 +101,10 @@ Finder.prototype.fetchSuggest = function(path) {
       path: path
     },
     dataType: "json"
-  }).then(function(reply) {
-    $("#finder-items").empty();
+  }).fail(function() {
+    console.log("finder network error");
+  }).done(function(reply) {
+    self.items.empty();
     if (reply.items.length == 0) {
       return;
     }
@@ -126,6 +126,7 @@ Finder.prototype.fetchSuggest = function(path) {
 Finder.prototype.hideSuggest = function() {
   var self = this;
   self.items.css({visibility: "hidden"});
+  self.items.empty();
   clearInterval(self.path_watcher);
   self.path_watcher = null;
 };
