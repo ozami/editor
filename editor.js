@@ -92,9 +92,14 @@ EditorManager.prototype.get = function(path) {
 EditorManager.prototype.activate = function(path) {
   $("#editors .editor.active").removeClass("active");
   var found = this.get(path);
-  found.addClass("active");
-  found.data("code_mirror").focus();
-  found.data("code_mirror").refresh();
+  if (found.length) {
+    found.addClass("active");
+    found.data("code_mirror").focus();
+    found.data("code_mirror").refresh();
+  }
+};
+EditorManager.prototype.getActive = function() {
+  return $("#editors .editor.active").data("path");
 };
 EditorManager.prototype.close = function(path) {
   this.get(path).remove();

@@ -44,6 +44,7 @@ var Finder = function() {
   });
   Mousetrap(this.path[0]).bind("esc", function() {
     self.hide();
+    editor_manager.activate(editor_manager.getActive());
     return false;
   });
 };
