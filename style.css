@@ -1,4 +1,5 @@
 html, body {
+  font-size: 12px;
   margin: 0;
   padding: 0;
   height: 100%;
@@ -15,24 +16,24 @@ header {
   left: 0;
   right: 0;
   top: 0;
-  height: 35px;
+  height: 32px;
 }
 #finder {
-  padding: 5px;
+  padding: 4px;
 }
 #finder-path {
   box-sizing: border-box;
   display: block;
   width: 100%;
   letter-spacing: 1px;
-  font-size: 14px;
-  padding-left: 5px;
+  font-size: 12px;
+  padding-left: 4px;
 }
 
 #finder-items {
   z-index: 100;
   visibility: hidden;
-  font-size: 14px;
+  font-size: 12px;
   position: absolute;
   background: #fff;
   width: 250px;
@@ -58,7 +59,7 @@ header {
 
 main {
   position: absolute;
-  top: 35px;
+  top: 32px;
   left: 0;
   right: 0;
   bottom: 0;
@@ -81,7 +82,7 @@ main {
 #files .file-item {
   display: block;
   cursor: pointer;
-  padding: 5px 10px;
+  padding: 4px 8px;
   position: relative;
 }
 #files .file-item.active,
@@ -92,14 +93,14 @@ main {
 #files .file-item .dir {
   display: block;
   color: #666;
-  font-size: 9px;
+  font-size: 8px;
   white-space: nowrap;
   margin-bottom: 1px;
   letter-spacing: 1px;
 }
 #files .file-item .name {
   display: block;
-  font-size: 12px;
+  font-size: 11px;
   white-space: nowrap;
   letter-spacing: 1px;
 }
@@ -145,7 +146,7 @@ main {
 }
 .editor .CodeMirror {
   box-sizing: border-box;
-  border-bottom: 36px solid transparent;
+  border-bottom: 26px solid transparent;
 }
 .editor .CodeMirror pre {
   line-height: 1.75;
@@ -176,7 +177,7 @@ main {
 }
 .editor-status {
   position: absolute;
-  height: 36px;
+  height: 26px;
   padding: 5px;
   left: 0;
   right: 0;
