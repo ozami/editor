@@ -60,7 +60,7 @@ EditorManager.prototype.open = function(path) {
         editor.data("code_mirror", code_mirror);
         
         // save
-        Mousetrap(editor[0]).bind("ctrl+s", function() {
+        Mousetrap(editor[0]).bind("mod+s", function() {
           $.ajax({
             url: "/write.php",
             method: "post",

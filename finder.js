@@ -25,7 +25,7 @@ var Finder = function() {
     self.selectItem(e.target);
   });
   // show finder
-  Mousetrap.bind(["ctrl+o", "ctrl+p"], function() {
+  Mousetrap.bind(["mod+o", "mod+p"], function() {
     self.show();
     self.path.focus();
     return false;
