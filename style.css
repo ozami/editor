@@ -182,7 +182,7 @@ main {
 .editor.active {
   display: block;
 }
-.editor-status {
+.editor-foot {
   position: absolute;
   height: 26px;
   padding: 5px;

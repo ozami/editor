@@ -53,18 +53,18 @@ EditorManager.prototype.open = function(path) {
         $(code_mirror.getInputField()).addClass("mousetrap"); // enable hotkey
         // status bar
         editor.append(
-          $('<div class="editor-status">').append(
+          $('<div class="editor-foot">').append(
+            $('<div class="editor-message">')
           )
         );
         editor.data("path", path);
         editor.data("code_mirror", code_mirror);
-        
         // save
-        Mousetrap(editor[0]).bind("mod+s", function() {
+        var save = function() {
           $.ajax({
             url: "/write.php",
             method: "post",
-            timeout: 3000,
+            timeout: 2000,
             data: {
               path: path,
               content: code_mirror.getValue()
@@ -72,10 +72,21 @@ EditorManager.prototype.open = function(path) {
             dataType: "json"
           }).done(function() {
             file_manager.setStatus(path, "clean");
+            editor.find(".editor-message").text("Saved.");
           }).fail(function() {
+            editor.find(".editor-message").text("Save failed.");
             file_manager.setStatus(path, "error");
-            alert("Save failed.");
           });
+        };
+        // auto save
+        setInterval(function() {
+          if (!code_mirror.isClean()) {
+            save();
+          }
+        }, 4000);
+        // save with command-s
+        Mousetrap(editor[0]).bind("mod+s", function() {
+          save();
           return false;
         });
 
