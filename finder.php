@@ -1,29 +1,35 @@
 <?php
 $path = $_REQUEST["path"];
-if (is_dir($path)) {
-  $dir = rtrim($path, "/");
+if (substr($path, 0, 1) != "/") {
+  $path = "/$path";
+}
+if (substr($path, -1) == "/") {
+  $dir = $path;
   $items = scandir($path);
   $stats = [];
   foreach ($items as $i) {
     if ($i == "." || $i == "..") {
       continue;
     }
-    $stats[] = [
-      "name" => $i,
-      "dir" => is_dir("$path/$i")
-    ];
+    if (is_dir("$dir$i")) {
+      $i .= "/";
+    }
+    $stats[] = $i;
   }
 } else {
   $stats = [];
   $dir = dirname($path);
+  if ($dir != "/") {
+    $dir .= "/";
+  }
   if (is_dir($dir)) {
     $basename = basename($path);
     foreach (scandir($dir) as $i) {
       if (strpos($i, $basename) === 0) {
-        $stats[] = [
-          "name" => $i,
-          "dir" => is_dir("$dir/$i")
-         ];
+        if (is_dir("$dir$i")) {
+          $i .= "/";
+        }
+        $stats[] = $i;
       }
     }
   }

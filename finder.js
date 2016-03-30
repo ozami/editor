@@ -1,151 +1,109 @@
 var Finder = function() {
   var self = this;
+  this.path = $("#finder-path").val(this._getLastPath());
   this.path_watcher = null;
-  this.last_path = localStorage.getItem("finder-path") || "/";
-  this.path = $("#finder-path");
-  this.items = $("#finder-items");
+  this.suggest = new FinderSuggest(this);
   
-  this.path.val(this.last_path);
-
-  // open file
+  // open file with enter key
   Mousetrap(this.path[0]).bind("enter", function() {
-    var active = self.items.find("a.active");
-    if (active.length) {
-      self.selectItem(active);
+    var path = self.suggest.getSelection();
+    if (path) {
+      self.suggestSelected(path);
     } else {
       file_manager.open(self.path.val());
+      self.hide();
     }
     return false;
   });
+  
+  // path completion with tab key
   Mousetrap(this.path[0]).bind("tab", function() {
-    var active = self.items.find("a.active");
-    if (active.length == 0) {
-      active = self.items.find("a").first();
-    }
-    if (active.length) {
-      self.path.val(active.data("path"));
-    }
+    var path = self.path.val();
+    self.suggest.fetch(path).then(function(suggest) {
+      if (suggest.items.length == 0) {
+        return;
+      }
+      if (suggest.items.length == 1) {
+        self.setPath(suggest.base + suggest.items[0]);
+        return;
+      }
+    }).catch(function() {
+      console.log("completion failed.");
+    });
     return false;
   });
-  // when finder item selected
-  this.items.on("mousedown", "a", function(e) {
-    e.preventDefault();
-  });
-  this.items.on("click", "a", function(e) {
-    self.selectItem(e.target);
-  });
+  
   // show finder
   Mousetrap.bind(["mod+o", "mod+p"], function() {
     self.show();
     self.path.focus();
     return false;
   });
+  
+  // hide on blur
   self.path.blur(function() {
     self.hide();
   });
+  
   // select item with up/down key
   Mousetrap(this.path[0]).bind("down", function() {
-    self.moveSelect(true);
+    self.suggest.moveSelect(true);
     return false;
   });
   Mousetrap(this.path[0]).bind("up", function() {
-    self.moveSelect(false);
+    self.suggest.moveSelect(false);
     return false;
   });
+  
+  // quit finder with esc key
   Mousetrap(this.path[0]).bind("esc", function() {
     self.hide();
     editor_manager.activate(editor_manager.getActive());
     return false;
   });
 };
-Finder.prototype.show = function(item) {
-  $("#finder").addClass("active");
-  this.showSuggest();
-};
-Finder.prototype.hide = function(item) {
-  $("#finder").removeClass("active");
-  this.hideSuggest();
-};
-Finder.prototype.selectItem = function(item) {
-  item = $(item);
-  this.path.val(item.data("path"));
-  if (!item.data("dir")) {
-    file_manager.open(this.path.val());
-    this.hideSuggest();
-  }
-};
-Finder.prototype.moveSelect = function(down) {
-  var dir = down ? "next" : "prev";
-  var target = this.items.find("a.active")[dir]();
-  if (target.length == 0) {
-    target = this.items.find("a")[down ? "first" : "last"]();
-  }
-  this.items.find("a.active").removeClass("active");
-  target.addClass("active");
-  if (target.length) {
-    target[0].scrollIntoView();
-  }
-};
-Finder.prototype.showSuggest = function() {
-  var self = this;
-  self.last_path = self.path.val();
-  self.fetchSuggest(self.last_path);
 
+Finder.prototype.suggestSelected = function(path) {
+  this.setPath(path);
+  if (path.substr(-1) != "/") {
+    file_manager.open(path);
+  }
+};
+
+Finder.prototype.show = function() {
+  var self = this;
+  $("#finder").addClass("active");
+  
+  // start suggest
   var pathChanged = _.debounce(function(path) {
-    localStorage.setItem("finder-path", path);
-    self.fetchSuggest(path);
-  }, 400);
+    self.suggest.update(path);
+  }, 300);
+  clearInterval(self.path_watcher);
   self.path_watcher = setInterval(function() {
     var current = self.path.val();
-    if (current != self.last_path) {
+    if (current != self._getLastPath()) {
+      self._setLastPath(current);
       pathChanged(current);
-      self.last_path = current;
     }
   }, 50);
 };
-Finder.prototype.fetchSuggest = function(path) {
-  var self = this;
-  $.ajax({
-    method: "post",
-    url: "/finder.php",
-    timeout: 3000,
-    data: {
-      path: path
-    },
-    dataType: "json"
-  }).fail(function() {
-    console.log("finder network error");
-  }).done(function(reply) {
-    self.items.empty();
-    self.items.css({visibility: "hidden"});
-    if (reply.items.length == 0) {
-      return;
-    }
-    if (reply.items.length == 1 && reply.base + "/" + reply.items[0].name == self.path.val()) {
-      return;
-    }
-    _.each(reply.items, function(item) {
-      var name = item.name;
-      if (item.dir) {
-        name += "/";
-      }
-      $("#finder-items").append(
-        $("<a>").text(name).data("path", reply.base + "/" + name).data("dir", item.dir)
-      );
-    });
-    $("#finder-items").scrollTop(0).css({visibility: "visible"});
-  });
+
+Finder.prototype.hide = function(item) {
+  $("#finder").removeClass("active");
 };
-Finder.prototype.hideSuggest = function() {
-  var self = this;
-  self.items.css({visibility: "hidden"});
-  self.items.empty();
-  clearInterval(self.path_watcher);
-  self.path_watcher = null;
-};
+
 Finder.prototype.setPath = function(path) {
   this.path.val(path);
-  this.last_path = path;
+  this._setLastPath(path);
+  this.suggest.update(path);
+};
+
+Finder.prototype._getLastPath = function() {
+  return localStorage.getItem("finder-path") || "/";
+};
+
+Finder.prototype._setLastPath = function(path) {
   localStorage.setItem("finder-path", path);
-}
+};
+
 var finder = new Finder();

@@ -48,6 +48,9 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
 }
+#finder-items.active {
+  visibility: visible;
+}
 #finder-items a {
   display: block;
   line-height: 24px;
@@ -56,7 +59,7 @@ body {
   white-space: nowrap;
   cursor: pointer;
 }
-#finder-items a.active,
+#finder-items a.selected,
 #finder-items a:hover {
   background: #ddd;
 }
