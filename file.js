@@ -9,6 +9,11 @@ var FileManager = function() {
     self.close(self.getActive());
     return false;
   }, 'keydown');
+  setTimeout(function() {
+    $.each(JSON.parse(localStorage.getItem("open-files") || "[]"), function(i, path) {
+      self.open(path);
+    });
+  }, 100);
 };
 FileManager.prototype.open = function(path) {
   var self = this;
@@ -25,6 +30,7 @@ FileManager.prototype.open = function(path) {
       $('<div class="status clean">')
     ).appendTo("#files");
     self.activate(path);
+    self._saveFileList();
   });
 };
 FileManager.prototype.get = function(path) {
@@ -80,5 +86,12 @@ FileManager.prototype.close = function(path) {
   }
   target.remove();
   editor_manager.close(path);
+  this._saveFileList();
+};
+FileManager.prototype._saveFileList = function() {
+  var files = $.map($("#files .file-item"), function(item) {
+    return $(item).data("path");
+  });
+  localStorage.setItem("open-files", JSON.stringify(files));
 };
 var file_manager = new FileManager();
