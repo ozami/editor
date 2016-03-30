@@ -150,6 +150,16 @@ main {
   height: 100%;
   width: 100%;
 }
+.editor .CodeMirror-gutters {
+  background-color: transparent;
+}
+.editor .CodeMirror-gutter {
+  min-width: 40px;
+}
+.editor .CodeMirror-linenumber {
+  color: #bbb;
+  letter-spacing: 1px;
+}
 .editor .CodeMirror {
   box-sizing: border-box;
   border-bottom: 26px solid transparent;
