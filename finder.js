@@ -17,6 +17,16 @@ var Finder = function() {
     }
     return false;
   });
+  Mousetrap(this.path[0]).bind("tab", function() {
+    var active = self.items.find("a.active");
+    if (active.length == 0) {
+      active = self.items.find("a").first();
+    }
+    if (active.length) {
+      self.path.val(active.data("path"));
+    }
+    return false;
+  });
   // when finder item selected
   this.items.on("mousedown", "a", function(e) {
     e.preventDefault();
@@ -107,6 +117,7 @@ Finder.prototype.fetchSuggest = function(path) {
     console.log("finder network error");
   }).done(function(reply) {
     self.items.empty();
+    self.items.css({visibility: "hidden"});
     if (reply.items.length == 0) {
       return;
     }
