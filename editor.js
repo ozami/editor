@@ -47,10 +47,11 @@ EditorManager.prototype.open = function(path) {
         code_mirror.on("changes", function() {
           file_manager.setStatus(
             path,
-            code_mirror.isClean() ? "clean": "modified"
+            code_mirror.isClean(code_mirror.last_save) ? "clean": "modified"
           );
         });
         $(code_mirror.getInputField()).addClass("mousetrap"); // enable hotkey
+        code_mirror.last_save = code_mirror.changeGeneration(true);
         // status bar
         editor.append(
           $('<div class="editor-foot">').append(
@@ -61,6 +62,7 @@ EditorManager.prototype.open = function(path) {
         editor.data("code_mirror", code_mirror);
         // save
         var save = function() {
+          var generation = code_mirror.changeGeneration(true);
           $.ajax({
             url: "/write.php",
             method: "post",
@@ -71,6 +73,7 @@ EditorManager.prototype.open = function(path) {
             },
             dataType: "json"
           }).done(function() {
+            code_mirror.last_save = generation;
             file_manager.setStatus(path, "clean");
             editor.find(".editor-message").text("Saved.");
           }).fail(function() {
@@ -80,7 +83,7 @@ EditorManager.prototype.open = function(path) {
         };
         // auto save
         setInterval(function() {
-          if (!code_mirror.isClean()) {
+          if (!code_mirror.isClean(code_mirror.last_save)) {
             save();
           }
         }, 4000);
