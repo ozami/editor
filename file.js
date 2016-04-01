@@ -5,7 +5,7 @@ var FileManager = function() {
     e.preventDefault();
     self.open($(e.currentTarget).data("path"));
   });
-  Mousetrap.bind("mod+k", function() {
+  Mousetrap.bind(["mod+w", "mod+k"], function() {
     self.close(self.getActive());
     return false;
   }, 'keydown');
