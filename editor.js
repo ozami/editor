@@ -39,6 +39,7 @@ EditorManager.prototype.open = function(path) {
           mode: mode.mime,
         });
         code_mirror.setOption("extraKeys", {
+          "Ctrl-Space": "autocomplete",
           Tab: function(cm) {
             var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
             cm.replaceSelection(spaces);
