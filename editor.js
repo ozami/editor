@@ -58,6 +58,7 @@ EditorManager.prototype.open = function(path) {
           }
         });
         code_mirror.on("changes", function() {
+          autoSave();
           file_manager.setStatus(
             path,
             code_mirror.isClean(code_mirror.last_save) ? "clean": "modified"
@@ -128,7 +129,7 @@ EditorManager.prototype.open = function(path) {
           });
         };
         // auto save
-        setInterval(function() {
+        var autoSave = _.debounce(function() {
           if (!code_mirror.isClean(code_mirror.last_save)) {
             save();
           }
