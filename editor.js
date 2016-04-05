@@ -24,11 +24,18 @@ EditorManager.prototype.open = function(path) {
         mime: "text/plain"
       };
       // calc indent size
-      var indentUnit = self.calcIndentUnit(reply.content);
+      var indentWithTabs = false;
+      var indentUnit = 4;
+      if (reply.content.match(/[\r\n]+\t/)) {
+        indentWithTabs = true;
+      } else {
+        indentUnit = self.calcIndentUnit(reply.content);
+      }
       CodeMirror.requireMode(mode.mode, function() {
         var code_mirror = CodeMirror(editor[0], {
           value: reply.content,
           lineNumbers: true,
+          indentWithTabs: indentWithTabs,
           tabSize: indentUnit,
           indentUnit: indentUnit,
           showCursorWhenSelecting: true,
