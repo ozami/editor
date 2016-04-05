@@ -151,7 +151,7 @@ main {
   width: 100%;
 }
 .editor .CodeMirror-gutters {
-  background-color: transparent;
+  background-color: white;
 }
 .editor .CodeMirror-gutter {
   min-width: 40px;
