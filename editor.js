@@ -49,8 +49,12 @@ EditorManager.prototype.open = function(path) {
           "Ctrl-Space": "autocomplete",
           "Ctrl-/": "toggleComment",
           Tab: function(cm) {
-            var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
-            cm.replaceSelection(spaces);
+            if (cm.getOption("indentWithTabs")) {
+              cm.replaceSelection("\t");
+            } else {
+              var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
+              cm.replaceSelection(spaces);
+            }
           }
         });
         code_mirror.on("changes", function() {
