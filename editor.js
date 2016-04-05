@@ -64,9 +64,21 @@ EditorManager.prototype.open = function(path) {
         // status bar
         editor.append(
           $('<div class="editor-foot">').append(
-            $('<div class="editor-message">')
+            $('<div class="editor-message">'),
+            $('<div class="editor-indent">')
           )
         );
+        var updateIndentInfo = function() {
+          var style;
+          if (code_mirror.getOption("indentWithTabs")) {
+            style = "TAB";
+          }
+          else {
+            style = code_mirror.getOption("indentUnit") + "SP";
+          }
+          editor.find(".editor-indent").text(style);
+        };
+        updateIndentInfo();
         editor.data("path", path);
         editor.data("code_mirror", code_mirror);
         // save

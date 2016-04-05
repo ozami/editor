@@ -204,3 +204,6 @@ main {
   box-sizing: border-box;
   font-size: 88%;
 }
+.editor-indent {
+  float: right;
+}
