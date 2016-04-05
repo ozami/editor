@@ -63,7 +63,28 @@ EditorManager.prototype.open = function(path) {
             code_mirror.isClean(code_mirror.last_save) ? "clean": "modified"
           );
         });
-        $(code_mirror.getInputField()).addClass("mousetrap"); // enable hotkey
+        var cm_input = code_mirror.getInputField();
+        $(cm_input).addClass("mousetrap"); // enable hotkey
+        Mousetrap(cm_input).bind("alt+b", function() {
+          code_mirror.execCommand("goWordLeft");
+          return false;
+        });
+        Mousetrap(cm_input).bind("alt+f", function() {
+          code_mirror.execCommand("goWordRight");
+          return false;
+        });
+        Mousetrap(cm_input).bind("alt+h", function() {
+          code_mirror.execCommand("delWordBefore");
+          return false;
+        });
+        Mousetrap(cm_input).bind("alt+d", function() {
+          code_mirror.execCommand("delWordAfter");
+          return false;
+        });
+        Mousetrap(cm_input).bind("mod+d", function() {
+          code_mirror.execCommand("delWordAfter");
+          return false;
+        });
         code_mirror.last_save = code_mirror.changeGeneration(true);
         // status bar
         editor.append(
