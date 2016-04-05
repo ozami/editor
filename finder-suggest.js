@@ -82,6 +82,16 @@ FinderSuggest.prototype.moveSelect = function(down) {
   this.items.find("a.selected").removeClass("selected");
   target.addClass("selected");
   if (target.length) {
-    target[0].scrollIntoView();
+    // scroll items pane to make the selected item visible
+    var height = target.height();
+    var top = target.prevAll().length * height;
+    var bottom = top + height;
+    var view_height = this.items.innerHeight();
+    if (top - this.items.scrollTop() < 0) {
+      this.items.scrollTop(top);
+    }
+    if (bottom - this.items.scrollTop() > view_height) {
+      this.items.scrollTop(bottom - view_height);
+    }
   }
 };
