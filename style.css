@@ -204,6 +204,9 @@ main {
   box-sizing: border-box;
   font-size: 88%;
 }
+.editor-message {
+  float: left;
+}
 .editor-indent {
   float: right;
 }
