@@ -91,7 +91,8 @@ EditorManager.prototype.open = function(path) {
         editor.append(
           $('<div class="editor-foot">').append(
             $('<div class="editor-message">'),
-            $('<div class="editor-indent">')
+            $('<div class="editor-indent">'),
+            $('<div class="editor-eol">')
           )
         );
         var updateIndentInfo = function() {
@@ -105,6 +106,15 @@ EditorManager.prototype.open = function(path) {
           editor.find(".editor-indent").text(style);
         };
         updateIndentInfo();
+        // line seprator
+        var eol = self.detectEol(reply.content);
+        var eol_names = {
+          "\r": "CR",
+          "\n": "LF",
+          "\r\n": "CRLF"
+        };
+        editor.find(".editor-eol").text(eol_names[eol]);
+        
         editor.data("path", path);
         editor.data("code_mirror", code_mirror);
         // save
@@ -116,7 +126,7 @@ EditorManager.prototype.open = function(path) {
             timeout: 2000,
             data: {
               path: path,
-              content: code_mirror.getValue()
+              content: code_mirror.getValue().replace(/\n/g, eol)
             },
             dataType: "json"
           }).done(function() {
@@ -176,5 +186,14 @@ EditorManager.prototype.calcIndentUnit = function(content) {
     }
   }
   return 4;
-}
+};
+EditorManager.prototype.detectEol = function(content) {
+  if (content.match("\r\n")) {
+    return "\r\n";
+  }
+  if (content.match("\r")) {
+    return "\r";
+  }
+  return "\n";
+};
 var editor_manager = new EditorManager();

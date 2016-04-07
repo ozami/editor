@@ -209,4 +209,11 @@ main {
 }
 .editor-indent {
   float: right;
+  letter-spacing: 2px;
+  margin-left: 10px;
+}
+.editor-eol {
+  float: right;
+  letter-spacing: 2px;
+  margin-left: 10px;
 }
