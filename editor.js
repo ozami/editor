@@ -48,14 +48,7 @@ EditorManager.prototype.open = function(path) {
         code_mirror.setOption("extraKeys", {
           "Ctrl-Space": "autocomplete",
           "Ctrl-/": "toggleComment",
-          Tab: function(cm) {
-            if (cm.getOption("indentWithTabs")) {
-              cm.replaceSelection("\t");
-            } else {
-              var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
-              cm.replaceSelection(spaces);
-            }
-          }
+          Tab: "indentAuto",
         });
         code_mirror.on("changes", function() {
           autoSave();
