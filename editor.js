@@ -48,6 +48,7 @@ EditorManager.prototype.open = function(path) {
         code_mirror.setOption("extraKeys", {
           "Ctrl-Space": "autocomplete",
           "Ctrl-/": "toggleComment",
+          "Cmd-/": "toggleComment",
           Tab: "indentAuto",
         });
         code_mirror.on("changes", function() {
