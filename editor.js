@@ -50,6 +50,8 @@ EditorManager.prototype.open = function(path) {
           "Ctrl-/": "toggleComment",
           "Cmd-/": "toggleComment",
           Tab: "indentAuto",
+          "Ctrl-D": false,
+          "Cmd-D": false,
         });
         code_mirror.on("changes", function() {
           autoSave();
@@ -77,7 +79,11 @@ EditorManager.prototype.open = function(path) {
           return false;
         });
         Mousetrap(cm_input).bind("mod+d", function() {
-          code_mirror.execCommand("delWordAfter");
+          code_mirror.setSelections(
+            code_mirror.listSelections().map(function(i) {
+              return code_mirror.findWordAt(i.anchor);
+            })
+          );
           return false;
         });
         code_mirror.last_save = code_mirror.changeGeneration(true);
