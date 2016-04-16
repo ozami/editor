@@ -25,7 +25,7 @@ if (substr($path, -1) == "/") {
   if (is_dir($dir)) {
     $basename = basename($path);
     foreach (scandir($dir) as $i) {
-      if (strpos($i, $basename) === 0) {
+      if (stripos($i, $basename) === 0) {
         if (is_dir("$dir$i")) {
           $i .= "/";
         }
