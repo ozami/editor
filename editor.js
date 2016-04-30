@@ -45,6 +45,7 @@ EditorManager.prototype.open = function(path) {
           autoCloseTags: true,
           mode: mode.mime,
         });
+        CodeMirror.registerHelper("hintWords", mode.mode, null);
         code_mirror.setOption("extraKeys", {
           "Ctrl-Space": "autocomplete",
           "Ctrl-/": "toggleComment",
