@@ -77,7 +77,7 @@ FinderSuggest.prototype.moveSelect = function(down) {
   var dir = down ? "next" : "prev";
   var target = this.items.find("a.selected")[dir]();
   if (target.length == 0) {
-    target = this.items.find("a")[down ? "first" : "last"]();
+    target = this.items.find("a")[down ? "last" : "first"]();
   }
   this.items.find("a.selected").removeClass("selected");
   target.addClass("selected");
