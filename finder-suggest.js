@@ -74,14 +74,19 @@ FinderSuggest.prototype.update = function(path) {
 };
 
 FinderSuggest.prototype.moveSelect = function(down) {
-  var dir = down ? "next" : "prev";
-  var target = this.items.find("a.selected")[dir]();
-  if (target.length == 0) {
-    target = this.items.find("a")[down ? "last" : "first"]();
-  }
-  this.items.find("a.selected").removeClass("selected");
-  target.addClass("selected");
+  var target = this.items.find("a.selected");
   if (target.length) {
+    target.removeClass("selected");
+    var t = target[down ? "next" : "prev"]();
+    if (t.length) {
+      target = t;
+    }
+  }
+  else {
+    target = this.items.find("a").first();
+  }
+  if (target.length) {
+    target.addClass("selected");
     // scroll items pane to make the selected item visible
     var height = target.height();
     var top = target.prevAll().length * height;
