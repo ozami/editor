@@ -6,7 +6,7 @@ if (substr($path, 0, 1) != "/") {
 if (substr($path, -1) == "/") {
   $dir = $path;
   $items = scandir($path);
-  $stats = [];
+  $stats = array();
   foreach ($items as $i) {
     if ($i == "." || $i == "..") {
       continue;
@@ -17,7 +17,7 @@ if (substr($path, -1) == "/") {
     $stats[] = $i;
   }
 } else {
-  $stats = [];
+  $stats = array();
   $dir = dirname($path);
   if ($dir != "/") {
     $dir .= "/";
@@ -34,7 +34,7 @@ if (substr($path, -1) == "/") {
     }
   }
 }
-echo json_encode([
+echo json_encode(array(
   "base" => $dir,
   "items" => $stats
-]);
+));
