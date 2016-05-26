@@ -75,15 +75,15 @@ Finder.prototype.show = function() {
   $("#finder").addClass("active");
   
   // start suggest
-  var pathChanged = _.debounce(function(path) {
-    self.suggest.update(path);
+  var pathChanged = _.debounce(function() {
+    self.suggest.update(self.path.val());
   }, 300);
   clearInterval(self.path_watcher);
   self.path_watcher = setInterval(function() {
     var current = self.path.val();
     if (current != self._getLastPath()) {
       self._setLastPath(current);
-      pathChanged(current);
+      pathChanged();
     }
   }, 50);
 };
