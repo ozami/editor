@@ -10,7 +10,8 @@ if (is_dir($path)) {
 
 if (!is_file($path)) {
   echo json_encode(array(
-    "content" => ""
+    "content" => "",
+    "encoding" => "UTF-8",
   ));
   die();
 }
