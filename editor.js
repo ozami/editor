@@ -49,6 +49,7 @@ EditorManager.prototype.open = function(path) {
         CodeMirror.registerHelper("hintWords", mode.mode, null);
         code_mirror.setOption("extraKeys", {
           "Ctrl-Space": "autocomplete",
+          "Ctrl-U": "autocomplete",
           "Ctrl-/": "toggleComment",
           "Cmd-/": "toggleComment",
           Tab: "indentAuto",
