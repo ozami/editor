@@ -1,7 +1,19 @@
 <?php
 $path = $_REQUEST["path"];
 
-if (file_put_contents($path, $_REQUEST["content"]) === false) {
+$content = mb_convert_encoding(
+  $_REQUEST["content"],
+  $_REQUEST["encoding"],
+  "UTF-8"
+);
+if ($content === false) {
+  echo json_encode(array(
+    "error" => "encode"
+  ));
+  die();
+}
+
+if (file_put_contents($path, $content) === false) {
   echo json_encode(array(
     "error" => "write"
   ));

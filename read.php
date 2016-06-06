@@ -23,7 +23,18 @@ if ($r === false) {
   die();
 }
 
+$encoding = mb_detect_encoding($r, array("UTF-8", "SJIS-WIN", "EUC-JP"), true);
+if ($encoding === false) {
+  echo json_encode(array(
+    "error" => "detect encoding"
+  ));
+  die();
+}
+
+$r = mb_convert_encoding($r, "utf-8", $encoding);
+
 echo json_encode(array(
+  "encoding" => $encoding,
   "content" => $r
 ));
 die();

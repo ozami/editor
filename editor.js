@@ -18,6 +18,7 @@ EditorManager.prototype.open = function(path) {
         reject();
         return;
       }
+      var encoding = reply.encoding;
       var editor = $("<div>").addClass("editor").appendTo("#editors");
       var mode = CodeMirror.findModeByExtension(path.replace(/.*[.](.+)$/, "$1")) || {
         mode: "text",
@@ -144,6 +145,7 @@ EditorManager.prototype.open = function(path) {
             timeout: 2000,
             data: {
               path: path,
+              encoding: encoding,
               content: code_mirror.getValue().replace(/\n/g, eol)
             },
             dataType: "json"
