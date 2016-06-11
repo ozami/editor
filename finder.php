@@ -23,9 +23,14 @@ if (substr($path, -1) == "/") {
     $dir .= "/";
   }
   if (is_dir($dir)) {
-    $basename = basename($path);
+    $pattern = preg_split("//u", basename($path));
+    array_shift($pattern);
+    foreach ($pattern as $i => $ch) {
+      $pattern[$i] = preg_quote($ch);
+    }
+    $pattern = "/^" . join(".*", $pattern) . "/ui";
     foreach (scandir($dir) as $i) {
-      if (stripos($i, $basename) === 0) {
+      if (preg_match($pattern, $i)) {
         if (is_dir("$dir$i")) {
           $i .= "/";
         }
