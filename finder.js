@@ -32,7 +32,13 @@ var Finder = function() {
     });
     return false;
   });
-  
+  //
+  Mousetrap(this.path[0]).bind("mod+u", function() {
+    var path = self.path.val();
+    path = path.replace(new RegExp("[^/]*/?$"), "");
+    self.path.val(path);
+    return false;
+  });
   // show finder
   Mousetrap.bind(["mod+o", "mod+p"], function() {
     self.show();
