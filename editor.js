@@ -150,10 +150,16 @@ EditorManager.prototype.open = function(path) {
               content: code_mirror.getValue().replace(/\n/g, eol)
             },
             dataType: "json"
-          }).done(function() {
-            code_mirror.last_save = generation;
-            file_manager.setStatus(path, "clean");
-            editor.find(".editor-message").text("Saved.");
+          }).done(function(reply) {
+            if (reply == "ok") {
+              code_mirror.last_save = generation;
+              file_manager.setStatus(path, "clean");
+              editor.find(".editor-message").text("Saved.");
+            }
+            else {
+              editor.find(".editor-message").text("Save failed. " + reply.error);
+              file_manager.setStatus(path, "error");
+            }
           }).fail(function() {
             editor.find(".editor-message").text("Save failed.");
             file_manager.setStatus(path, "error");
