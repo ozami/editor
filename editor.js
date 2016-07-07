@@ -82,7 +82,7 @@ EditorManager.prototype.open = function(path) {
             line = line.match(/^([ \t]*)(.*)/);
             var indent = line[1];
             var text = line[2];
-            indent = (dest + base_indent).substr(0, dest.length + indent.length - base_indent.length);
+            indent = (dest + indent).substr(0, dest.length + indent.length - base_indent.length);
             return indent + text;
           });
           change.text[0] = change.text[0].substr(dest.length);
