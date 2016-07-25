@@ -1,3 +1,7 @@
+var $ = require("jquery");
+var editor_manager = require("./editor.js");
+var Mousetrap = require("mousetrap");
+
 // FileManager
 var FileManager = function() {
   var self = this;
@@ -49,6 +53,7 @@ FileManager.prototype.activate = function(path) {
   $("#files .file-item.active").removeClass("active");
   file.addClass("active");
   editor_manager.activate(path);
+  var finder = require("./finder.js");
   finder.setPath(path);
   return true;
 };
@@ -94,4 +99,4 @@ FileManager.prototype._saveFileList = function() {
   });
   localStorage.setItem("open-files", JSON.stringify(files));
 };
-var file_manager = new FileManager();
+module.exports = new FileManager();
