@@ -1,3 +1,6 @@
+var $ = require("jquery");
+var _ = require("underscore");
+
 var FinderSuggest = function(finder) {
   var self = this;
   this.finder = finder;
@@ -100,3 +103,5 @@ FinderSuggest.prototype.moveSelect = function(down) {
     }
   }
 };
+
+module.exports = FinderSuggest;

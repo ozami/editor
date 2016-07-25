@@ -1,3 +1,39 @@
+var $ = require("jquery");
+var _ = require("underscore");
+var CodeMirror = require("codemirror");
+require("codemirror/mode/coffeescript/coffeescript");
+require("codemirror/mode/css/css");
+require("codemirror/mode/diff/diff");
+require("codemirror/mode/javascript/javascript");
+require("codemirror/mode/php/php");
+require("codemirror/mode/go/go");
+require("codemirror/mode/htmlembedded/htmlembedded");
+require("codemirror/mode/htmlmixed/htmlmixed");
+require("codemirror/mode/python/python");
+require("codemirror/mode/markdown/markdown");
+require("codemirror/mode/sass/sass");
+require("codemirror/mode/ruby/ruby");
+require("codemirror/mode/shell/shell");
+require("codemirror/mode/sql/sql");
+require("codemirror/mode/xml/xml");
+require("codemirror/mode/yaml/yaml");
+require("codemirror/addon/mode/loadmode.js");
+require("codemirror/addon/mode/simple.js");
+require("codemirror/mode/meta.js");
+require("codemirror/addon/edit/matchbrackets.js");
+require("codemirror/addon/edit/closebrackets.js");
+require("codemirror/addon/fold/xml-fold.js");
+require("codemirror/addon/edit/matchtags.js");
+require("codemirror/addon/edit/closetag.js");
+require("codemirror/addon/dialog/dialog.js");
+require("codemirror/addon/search/searchcursor.js");
+require("codemirror/addon/search/search.js");
+require("codemirror/addon/search/jump-to-line.js");
+require("codemirror/addon/hint/show-hint.js");
+require("codemirror/addon/hint/anyword-hint.js");
+require("codemirror/addon/comment/comment.js");
+require("./text-mode.js");
+
 // EditorManager
 var EditorManager = function() {
 };
@@ -89,6 +125,7 @@ EditorManager.prototype.open = function(path) {
         });
         code_mirror.on("changes", function() {
           autoSave();
+          var file_manager = require("./file.js");
           file_manager.setStatus(
             path,
             code_mirror.isClean(code_mirror.last_save) ? "clean": "modified"
@@ -184,15 +221,18 @@ EditorManager.prototype.open = function(path) {
           }).done(function(reply) {
             if (reply == "ok") {
               code_mirror.last_save = generation;
+              var file_manager = require("./file.js");
               file_manager.setStatus(path, "clean");
               editor.find(".editor-message").text("Saved.");
             }
             else {
               editor.find(".editor-message").text("Save failed. " + reply.error);
+              var file_manager = require("./file.js");
               file_manager.setStatus(path, "error");
             }
           }).fail(function() {
             editor.find(".editor-message").text("Save failed.");
+            var file_manager = require("./file.js");
             file_manager.setStatus(path, "error");
           });
         };
@@ -254,4 +294,5 @@ EditorManager.prototype.detectEol = function(content) {
   }
   return "\n";
 };
-var editor_manager = new EditorManager();
+
+module.exports = new EditorManager();

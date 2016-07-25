@@ -1,3 +1,10 @@
+var $ = require("jquery");
+var _ = require("underscore");
+var Mousetrap = require("mousetrap");
+var editor_manager = require("./editor.js");
+var file_manager = require("./file.js");
+var FinderSuggest = require("./finder-suggest.js");
+
 var Finder = function() {
   var self = this;
   this.path = $("#finder-path").val(this._getLastPath());
@@ -112,4 +119,4 @@ Finder.prototype._setLastPath = function(path) {
   localStorage.setItem("finder-path", path);
 };
 
-var finder = new Finder();
+module.exports = new Finder();
