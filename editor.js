@@ -180,9 +180,15 @@ EditorManager.prototype.open = function(path) {
           $('<div class="editor-foot">').append(
             $('<div class="editor-message">'),
             $('<div class="editor-indent">'),
-            $('<div class="editor-eol">')
+            $('<div class="editor-eol">'),
+            $('<div class="editor-mode">')
           )
         );
+        var updateModeInfo = function() {
+          var mode = code_mirror.getMode();
+          $(".editor-mode").text(mode.name);
+        };
+        updateModeInfo();
         var updateIndentInfo = function() {
           var style;
           if (code_mirror.getOption("indentWithTabs")) {
