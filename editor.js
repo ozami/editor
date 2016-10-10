@@ -8,6 +8,7 @@ require("codemirror/mode/javascript/javascript");
 require("codemirror/mode/php/php");
 require("codemirror/mode/go/go");
 require("codemirror/mode/rust/rust");
+require("codemirror/mode/toml/toml");
 require("codemirror/mode/htmlembedded/htmlembedded");
 require("codemirror/mode/htmlmixed/htmlmixed");
 require("codemirror/mode/python/python");

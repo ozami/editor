@@ -9,6 +9,7 @@ require("codemirror/mode/javascript/javascript");
 require("codemirror/mode/php/php");
 require("codemirror/mode/go/go");
 require("codemirror/mode/rust/rust");
+require("codemirror/mode/toml/toml");
 require("codemirror/mode/htmlembedded/htmlembedded");
 require("codemirror/mode/htmlmixed/htmlmixed");
 require("codemirror/mode/python/python");
@@ -305,7 +306,7 @@ EditorManager.prototype.detectEol = function(content) {
 
 module.exports = new EditorManager();
 
-},{"./file.js":2,"./text-mode.js":44,"codemirror":21,"codemirror/addon/comment/comment.js":6,"codemirror/addon/dialog/dialog.js":7,"codemirror/addon/edit/closebrackets.js":8,"codemirror/addon/edit/closetag.js":9,"codemirror/addon/edit/matchbrackets.js":10,"codemirror/addon/edit/matchtags.js":11,"codemirror/addon/fold/xml-fold.js":12,"codemirror/addon/hint/anyword-hint.js":13,"codemirror/addon/hint/show-hint.js":14,"codemirror/addon/mode/loadmode.js":15,"codemirror/addon/mode/simple.js":17,"codemirror/addon/search/jump-to-line.js":18,"codemirror/addon/search/search.js":19,"codemirror/addon/search/searchcursor.js":20,"codemirror/mode/coffeescript/coffeescript":23,"codemirror/mode/css/css":24,"codemirror/mode/diff/diff":25,"codemirror/mode/go/go":26,"codemirror/mode/htmlembedded/htmlembedded":27,"codemirror/mode/htmlmixed/htmlmixed":28,"codemirror/mode/javascript/javascript":29,"codemirror/mode/markdown/markdown":30,"codemirror/mode/meta.js":31,"codemirror/mode/php/php":32,"codemirror/mode/python/python":33,"codemirror/mode/ruby/ruby":34,"codemirror/mode/rust/rust":35,"codemirror/mode/sass/sass":36,"codemirror/mode/shell/shell":37,"codemirror/mode/sql/sql":38,"codemirror/mode/xml/xml":39,"codemirror/mode/yaml/yaml":40,"jquery":41,"underscore":43}],2:[function(require,module,exports){
+},{"./file.js":2,"./text-mode.js":45,"codemirror":21,"codemirror/addon/comment/comment.js":6,"codemirror/addon/dialog/dialog.js":7,"codemirror/addon/edit/closebrackets.js":8,"codemirror/addon/edit/closetag.js":9,"codemirror/addon/edit/matchbrackets.js":10,"codemirror/addon/edit/matchtags.js":11,"codemirror/addon/fold/xml-fold.js":12,"codemirror/addon/hint/anyword-hint.js":13,"codemirror/addon/hint/show-hint.js":14,"codemirror/addon/mode/loadmode.js":15,"codemirror/addon/mode/simple.js":17,"codemirror/addon/search/jump-to-line.js":18,"codemirror/addon/search/search.js":19,"codemirror/addon/search/searchcursor.js":20,"codemirror/mode/coffeescript/coffeescript":23,"codemirror/mode/css/css":24,"codemirror/mode/diff/diff":25,"codemirror/mode/go/go":26,"codemirror/mode/htmlembedded/htmlembedded":27,"codemirror/mode/htmlmixed/htmlmixed":28,"codemirror/mode/javascript/javascript":29,"codemirror/mode/markdown/markdown":30,"codemirror/mode/meta.js":31,"codemirror/mode/php/php":32,"codemirror/mode/python/python":33,"codemirror/mode/ruby/ruby":34,"codemirror/mode/rust/rust":35,"codemirror/mode/sass/sass":36,"codemirror/mode/shell/shell":37,"codemirror/mode/sql/sql":38,"codemirror/mode/toml/toml":39,"codemirror/mode/xml/xml":40,"codemirror/mode/yaml/yaml":41,"jquery":42,"underscore":44}],2:[function(require,module,exports){
 var $ = require("jquery");
 var editor_manager = require("./editor.js");
 var Mousetrap = require("mousetrap");
@@ -409,7 +410,7 @@ FileManager.prototype._saveFileList = function() {
 };
 module.exports = new FileManager();
 
-},{"./editor.js":1,"./finder.js":4,"jquery":41,"mousetrap":42}],3:[function(require,module,exports){
+},{"./editor.js":1,"./finder.js":4,"jquery":42,"mousetrap":43}],3:[function(require,module,exports){
 var $ = require("jquery");
 var _ = require("underscore");
 
@@ -518,7 +519,7 @@ FinderSuggest.prototype.moveSelect = function(down) {
 
 module.exports = FinderSuggest;
 
-},{"jquery":41,"underscore":43}],4:[function(require,module,exports){
+},{"jquery":42,"underscore":44}],4:[function(require,module,exports){
 var $ = require("jquery");
 var _ = require("underscore");
 var Mousetrap = require("mousetrap");
@@ -642,7 +643,7 @@ Finder.prototype._setLastPath = function(path) {
 
 module.exports = new Finder();
 
-},{"./editor.js":1,"./file.js":2,"./finder-suggest.js":3,"jquery":41,"mousetrap":42,"underscore":43}],5:[function(require,module,exports){
+},{"./editor.js":1,"./file.js":2,"./finder-suggest.js":3,"jquery":42,"mousetrap":43,"underscore":44}],5:[function(require,module,exports){
 (function() {
   var Mousetrap = require("mousetrap");
   var file_manager = require("./file.js");
@@ -659,7 +660,7 @@ module.exports = new Finder();
   }, 'keydown');
 })();
 
-},{"./file.js":2,"./finder.js":4,"mousetrap":42}],6:[function(require,module,exports){
+},{"./file.js":2,"./finder.js":4,"mousetrap":43}],6:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -14476,7 +14477,7 @@ CodeMirror.defineMIME("text/x-go", "go");
   CodeMirror.defineMIME("text/html", "htmlmixed");
 });
 
-},{"../../lib/codemirror":21,"../css/css":24,"../javascript/javascript":29,"../xml/xml":39}],29:[function(require,module,exports){
+},{"../../lib/codemirror":21,"../css/css":24,"../javascript/javascript":29,"../xml/xml":40}],29:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -16042,7 +16043,7 @@ CodeMirror.defineMIME("text/x-markdown", "markdown");
 
 });
 
-},{"../../lib/codemirror":21,"../meta":31,"../xml/xml":39}],31:[function(require,module,exports){
+},{"../../lib/codemirror":21,"../meta":31,"../xml/xml":40}],31:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -18176,6 +18177,96 @@ CodeMirror.defineMode("sql", function(config, parserConfig) {
 })(function(CodeMirror) {
 "use strict";
 
+CodeMirror.defineMode("toml", function () {
+  return {
+    startState: function () {
+      return {
+        inString: false,
+        stringType: "",
+        lhs: true,
+        inArray: 0
+      };
+    },
+    token: function (stream, state) {
+      //check for state changes
+      if (!state.inString && ((stream.peek() == '"') || (stream.peek() == "'"))) {
+        state.stringType = stream.peek();
+        stream.next(); // Skip quote
+        state.inString = true; // Update state
+      }
+      if (stream.sol() && state.inArray === 0) {
+        state.lhs = true;
+      }
+      //return state
+      if (state.inString) {
+        while (state.inString && !stream.eol()) {
+          if (stream.peek() === state.stringType) {
+            stream.next(); // Skip quote
+            state.inString = false; // Clear flag
+          } else if (stream.peek() === '\\') {
+            stream.next();
+            stream.next();
+          } else {
+            stream.match(/^.[^\\\"\']*/);
+          }
+        }
+        return state.lhs ? "property string" : "string"; // Token style
+      } else if (state.inArray && stream.peek() === ']') {
+        stream.next();
+        state.inArray--;
+        return 'bracket';
+      } else if (state.lhs && stream.peek() === '[' && stream.skipTo(']')) {
+        stream.next();//skip closing ]
+        // array of objects has an extra open & close []
+        if (stream.peek() === ']') stream.next();
+        return "atom";
+      } else if (stream.peek() === "#") {
+        stream.skipToEnd();
+        return "comment";
+      } else if (stream.eatSpace()) {
+        return null;
+      } else if (state.lhs && stream.eatWhile(function (c) { return c != '=' && c != ' '; })) {
+        return "property";
+      } else if (state.lhs && stream.peek() === "=") {
+        stream.next();
+        state.lhs = false;
+        return null;
+      } else if (!state.lhs && stream.match(/^\d\d\d\d[\d\-\:\.T]*Z/)) {
+        return 'atom'; //date
+      } else if (!state.lhs && (stream.match('true') || stream.match('false'))) {
+        return 'atom';
+      } else if (!state.lhs && stream.peek() === '[') {
+        state.inArray++;
+        stream.next();
+        return 'bracket';
+      } else if (!state.lhs && stream.match(/^\-?\d+(?:\.\d+)?/)) {
+        return 'number';
+      } else if (!stream.eatSpace()) {
+        stream.next();
+      }
+      return null;
+    }
+  };
+});
+
+CodeMirror.defineMIME('text/x-toml', 'toml');
+
+});
+
+},{"../../lib/codemirror":21}],40:[function(require,module,exports){
+// CodeMirror, copyright (c) by Marijn Haverbeke and others
+// Distributed under an MIT license: http://codemirror.net/LICENSE
+
+(function(mod) {
+  if (typeof exports == "object" && typeof module == "object") // CommonJS
+    mod(require("../../lib/codemirror"));
+  else if (typeof define == "function" && define.amd) // AMD
+    define(["../../lib/codemirror"], mod);
+  else // Plain browser env
+    mod(CodeMirror);
+})(function(CodeMirror) {
+"use strict";
+
 var htmlConfig = {
   autoSelfClosers: {'area': true, 'base': true, 'br': true, 'col': true, 'command': true,
                     'embed': true, 'frame': true, 'hr': true, 'img': true, 'input': true,
@@ -18558,7 +18649,7 @@ if (!CodeMirror.mimeModes.hasOwnProperty("text/html"))
 
 });
 
-},{"../../lib/codemirror":21}],40:[function(require,module,exports){
+},{"../../lib/codemirror":21}],41:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -18677,7 +18768,7 @@ CodeMirror.defineMIME("text/x-yaml", "yaml");
 
 });
 
-},{"../../lib/codemirror":21}],41:[function(require,module,exports){
+},{"../../lib/codemirror":21}],42:[function(require,module,exports){
 /*eslint-disable no-unused-vars*/
 /*!
  * jQuery JavaScript Library v3.1.0
@@ -28753,7 +28844,7 @@ if ( !noGlobal ) {
 return jQuery;
 } );
 
-},{}],42:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 /*global define:false */
 /**
  * Copyright 2016 Craig Campbell
@@ -29793,7 +29884,7 @@ return jQuery;
     }
 }) (typeof window !== 'undefined' ? window : null, typeof  window !== 'undefined' ? document : null);
 
-},{}],43:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 //     Underscore.js 1.8.3
 //     http://underscorejs.org
 //     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -31343,7 +31434,7 @@ return jQuery;
   }
 }.call(this));
 
-},{}],44:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 var CodeMirror = require("codemirror");
 
 CodeMirror.defineSimpleMode("text", {
