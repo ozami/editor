@@ -187,6 +187,9 @@ main {
   margin-right: -1px;
   margin-top: -1px;
 }
+.editor .CodeMirror-search-field {
+  width: 50em !important;
+}
 .editor {
   display: none;
 }
