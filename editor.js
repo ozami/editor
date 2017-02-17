@@ -184,6 +184,7 @@ EditorManager.prototype.open = function(path) {
             $('<div class="editor-message">'),
             $('<div class="editor-indent">'),
             $('<div class="editor-eol">'),
+            $('<div class="editor-encoding">'),
             $('<div class="editor-mode">')
           )
         );
@@ -211,6 +212,8 @@ EditorManager.prototype.open = function(path) {
           "\r\n": "CRLF"
         };
         editor.find(".editor-eol").text(eol_names[eol]);
+        // encoding
+        editor.find(".editor-encoding").text(encoding);
         
         editor.data("path", path);
         editor.data("code_mirror", code_mirror);

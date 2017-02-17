@@ -224,3 +224,7 @@ main {
   letter-spacing: 2px;
   padding: 0 0.5rem;
 }
+.editor-encoding {
+  float: right;
+  padding: 0 0.5rem;
+}
