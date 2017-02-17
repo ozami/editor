@@ -83,6 +83,7 @@ EditorManager.prototype.open = function(path) {
           matchTags: true,
           autoCloseTags: true,
           mode: mode.mime,
+          dragDrop: false,
         });
         CodeMirror.registerHelper("hintWords", mode.mode, null);
         code_mirror.setOption("extraKeys", {
