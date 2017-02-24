@@ -167,7 +167,7 @@ main {
 }
 .editor .CodeMirror pre {
   font-family: "Source Han Code JP", monospace;
-  line-height: 1.75;
+  line-height: 1.8;
 }
 .editor .CodeMirror-cursor {
   border-left-width: 2px !important;
