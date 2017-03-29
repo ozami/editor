@@ -24,7 +24,7 @@ if ($r === false) {
   die();
 }
 
-$encoding = mb_detect_encoding($r, array("UTF-8", "SJIS-WIN", "EUC-JP"), true);
+$encoding = mb_detect_encoding($r, array("UTF-8", "EUC-JP", "SJIS-WIN"), true);
 if ($encoding === false) {
   echo json_encode(array(
     "error" => "detect encoding"
