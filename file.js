@@ -13,6 +13,10 @@ var FileManager = function() {
     self.close(self.getActive());
     return false;
   }, 'keydown');
+  Mousetrap.bind(["mod+r"], function() {
+    self.reload(self.getActive());
+    return false;
+  }, 'keydown');
   setTimeout(function() {
     $.each(JSON.parse(localStorage.getItem("open-files") || "[]"), function(i, path) {
       self.open(path);
@@ -93,6 +97,12 @@ FileManager.prototype.close = function(path) {
   editor_manager.close(path);
   this._saveFileList();
 };
+
+FileManager.prototype.reload = function(path) {
+  this.close(path);
+  this.open(path);
+};
+
 FileManager.prototype._saveFileList = function() {
   var files = $.map($("#files .file-item"), function(item) {
     return $(item).data("path");
