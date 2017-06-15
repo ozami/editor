@@ -215,7 +215,7 @@ EditorManager.prototype.open = function(path) {
         );
         var updateModeInfo = function() {
           var mode = code_mirror.getMode();
-          $(".editor-mode").text(mode.name);
+          editor.find(".editor-mode").text(mode.name);
         };
         updateModeInfo();
         var updateIndentInfo = function() {
