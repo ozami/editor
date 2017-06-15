@@ -19,7 +19,6 @@ require("codemirror/mode/shell/shell");
 require("codemirror/mode/sql/sql");
 require("codemirror/mode/xml/xml");
 require("codemirror/mode/yaml/yaml");
-require("codemirror/addon/mode/loadmode.js");
 require("codemirror/addon/mode/simple.js");
 require("codemirror/mode/meta.js");
 require("codemirror/addon/edit/matchbrackets.js");
@@ -70,7 +69,7 @@ EditorManager.prototype.open = function(path) {
       } else {
         indentUnit = self.calcIndentUnit(reply.content);
       }
-      CodeMirror.requireMode(mode.mode, function() {
+      (function() {
         var code_mirror = CodeMirror(editor[0], {
           value: reply.content,
           lineNumbers: true,
@@ -287,7 +286,7 @@ EditorManager.prototype.open = function(path) {
         });
 
         resolve();
-      });
+      })();
     }).fail(function() {
       reject();
     });
