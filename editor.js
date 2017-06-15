@@ -57,10 +57,26 @@ EditorManager.prototype.open = function(path) {
       }
       var encoding = reply.encoding;
       var editor = $("<div>").addClass("editor").appendTo("#editors");
-      var mode = CodeMirror.findModeByExtension(path.replace(/.*[.](.+)$/, "$1")) || {
-        mode: "text",
-        mime: "text/plain"
-      };
+      var mode = (function() {
+        var extension = path.replace(/.*[.](.+)$/, "$1");
+        var mode = {
+          tag: {
+            mode: "html",
+            mime: "text/html"
+          },
+        }[extension];
+        if (mode) {
+          return mode;
+        }
+        mode = CodeMirror.findModeByExtension(extension);
+        if (mode) {
+          return mode;
+        }
+        return {
+          mode: "text",
+          mime: "text/plain"
+        };
+      })();
       // calc indent size
       var indentWithTabs = false;
       var indentUnit = 4;
