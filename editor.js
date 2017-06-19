@@ -60,22 +60,17 @@ EditorManager.prototype.open = function(path) {
       var mode = (function() {
         var extension = path.replace(/.*[.](.+)$/, "$1");
         var mode = {
-          tag: {
-            mode: "html",
-            mime: "text/html"
-          },
+          html: "php",
+          tag: "php",
         }[extension];
         if (mode) {
           return mode;
         }
         mode = CodeMirror.findModeByExtension(extension);
         if (mode) {
-          return mode;
+          return mode.mode;
         }
-        return {
-          mode: "text",
-          mime: "text/plain"
-        };
+        return "text";
       })();
       // calc indent size
       var indentWithTabs = false;
@@ -97,10 +92,10 @@ EditorManager.prototype.open = function(path) {
           matchBrackets: true,
           matchTags: true,
           autoCloseTags: true,
-          mode: mode.mime,
+          mode: mode,
           dragDrop: false,
         });
-        CodeMirror.registerHelper("hintWords", mode.mode, null);
+        CodeMirror.registerHelper("hintWords", mode, null);
         code_mirror.setOption("extraKeys", {
           "Ctrl-Space": "autocomplete",
           "Ctrl-U": "autocomplete",
