@@ -1,4 +1,4 @@
-(function() {
+module.exports.run = function() {
   var Mousetrap = require("mousetrap");
   var file_manager = require("./file.js");
   var finder = require("./finder.js");
@@ -12,4 +12,4 @@
     file_manager.prevFile();
     return false;
   }, 'keydown');
-})();
+};
