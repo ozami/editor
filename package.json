@@ -3,18 +3,21 @@
   "description": "Code editor.",
   "version": "1.0.0",
   "main": "index.js",
-  "dependencies": {},
-  "devDependencies": {
+  "dependencies": {
     "codemirror": "^5.21.0",
     "jquery": "^3.1.0",
     "mousetrap": "^1.6.0",
-    "underscore": "^1.8.3",
-    "browserify": "^13.0.1",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "browserify": "^14.4.0",
+    "uglify-js": "^3.0.21",
     "watchify": "^3.7.0"
   },
   "scripts": {
-    "build": "browserify main.js -o index.js",
-    "watch": "watchify main.js -o index.js --debug --verbose",
+    "build-vendor": "node build-vendor.js",
+    "build-app": "node build-app.js",
+    "build-release": "node build-release.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
