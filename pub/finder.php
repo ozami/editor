@@ -3,8 +3,10 @@ $path = $_REQUEST["path"];
 if (substr($path, 0, 1) != "/") {
   $path = "/$path";
 }
-
-if (strpos($path, "/?") !== false) {
+if (strpos($path, "/~") !== false) {
+  $reply = grep($path);
+}
+else if (strpos($path, "/?") !== false) {
   $reply = find($path);
 }
 else if (substr($path, -1) == "/") {
@@ -12,6 +14,26 @@ else if (substr($path, -1) == "/") {
 }
 else {
   $reply = listFile($path);
+}
+
+function grep($path)
+{
+  list($dir, $query) = explode("/~", $path, 2);
+  $dir .= "/";
+  if ($query == "") {
+    return [
+      "base" => $dir,
+      "items" => [],
+    ];
+  }
+  chdir($dir);
+  $cmd = "grep --recursive --files-with-match --extended-regexp ";
+  $cmd .= "--regexp=" . escapeshellarg($query);
+  exec($cmd, $out);
+  return [
+    "base" => $dir,
+    "items" => $out,
+  ];
 }
 
 function find($path)
