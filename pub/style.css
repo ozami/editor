@@ -41,7 +41,8 @@ body {
   font-size: 0.875rem;
   position: absolute;
   background: #fff;
-  width: 20rem;
+  min-width: 10rem;
+  width: auto;
   border: 1px solid #999;
   letter-spacing: 0.1rem;
   margin-top: 0.125rem;

@@ -3,7 +3,56 @@ $path = $_REQUEST["path"];
 if (substr($path, 0, 1) != "/") {
   $path = "/$path";
 }
-if (substr($path, -1) == "/") {
+
+if (strpos($path, "/?") !== false) {
+  $reply = find($path);
+}
+else if (substr($path, -1) == "/") {
+  $reply = listDir($path);
+}
+else {
+  $reply = listFile($path);
+}
+
+function find($path)
+{
+  $find = function($dir, $query) use (&$find) {
+    $matches = array();
+    foreach (scandir($dir) as $i) {
+      if ($i == "." || $i == "..") {
+        continue;
+      }
+      $path = $dir . $i;
+      if (is_dir($path)) {
+        $path .= "/";
+        if (stripos($i, $query) !== false) {
+          $matches[] = $path;
+        }
+        $matches = array_merge($matches, $find($path, $query));
+      }
+      else {
+        if (stripos($i, $query) !== false) {
+          $matches[] = $path;
+        }
+      }
+    }
+    return $matches;
+  };
+  list($dir, $query) = explode("/?", $path, 2);
+  $dir .= "/";
+  $items = $find($dir, $query);
+  $dir_length = strlen($dir);
+  $items = array_map(function($i) use ($dir_length) {
+    return substr($i, $dir_length);
+  }, $items);
+  return [
+    "base" => $dir,
+    "items" => $items,
+  ];
+}
+
+function listDir($path)
+{
   $dir = $path;
   $items = scandir($path);
   $stats = array();
@@ -16,7 +65,14 @@ if (substr($path, -1) == "/") {
     }
     $stats[] = $i;
   }
-} else {
+  return [
+    "base" => $dir,
+    "items" => $stats,
+  ];
+}
+
+function listFile($path)
+{
   $stats = array();
   $dir = dirname($path);
   if ($dir != "/") {
@@ -38,8 +94,10 @@ if (substr($path, -1) == "/") {
       }
     }
   }
+  return [
+    "base" => $dir,
+    "items" => $stats,
+  ];
 }
-echo json_encode(array(
-  "base" => $dir,
-  "items" => $stats
-));
+
+echo json_encode($reply);
