@@ -169,6 +169,7 @@ main {
 .editor .CodeMirror pre {
   font-family: "Source Han Code JP", monospace;
   line-height: 1.8;
+  color: #aaa;
 }
 .editor .CodeMirror-cursor {
   border-left-width: 2px !important;
@@ -179,14 +180,50 @@ main {
 .CodeMirror-focused .CodeMirror-selected {
   background: #ddeeff;
 }
+.editor .cm-qualifier {
+  color: #2f6f9f;
+}
+.editor .cm-keyword,
+.editor .cm-atom,
+.editor .cm-builtin {
+  color: #1a69a7;
+}
+.editor .cm-tag,
+.editor .cm-def,
+.editor .cm-attribute,
+.editor .cm-operator,
+.editor .cm-number,
+.editor .cm-property,
+.editor .cm-variable,
+.editor .cm-variable-2 {
+  color: #333;
+}
+.editor .cm-string {
+  color: #488f02;
+}
+.editor .cm-bracket {
+  color: #aaa;
+}
+.editor .CodeMirror .CodeMirror-activeline pre {
+  color: #333;
+}
+.editor .CodeMirror-activeline-background {
+  background: transparent;
+}
+.editor .CodeMirror-matchingtag {
+  background: transparent;
+}
+.editor .CodeMirror-matchingtag:not(.cm-bracket) {
+  background: #eef3fc;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px #4784f1;
+  color: #224;
+}
 .editor .CodeMirror span.CodeMirror-matchingbracket {
   background: #eef3fc;
-  border: 1px solid #58b;
   border-radius: 2px;
-  color: #000;
-  margin-left: -1px;
-  margin-right: -1px;
-  margin-top: -1px;
+  box-shadow: 0 0 0 1px #4784f1;
+  color: #224;
 }
 .editor .CodeMirror-search-field {
   width: 50em !important;

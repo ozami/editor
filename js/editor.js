@@ -61,6 +61,7 @@ EditorManager.prototype.open = function(path) {
           matchBrackets: true,
           matchTags: true,
           autoCloseTags: true,
+          styleActiveLine: true,
           mode: mode,
           dragDrop: false,
         });
