@@ -62,6 +62,7 @@ EditorManager.prototype.open = function(path) {
           matchTags: true,
           autoCloseTags: true,
           styleActiveLine: true,
+          styleSelectedText: true,
           mode: mode,
           dragDrop: false,
         });
@@ -75,6 +76,7 @@ EditorManager.prototype.open = function(path) {
           "Ctrl-D": false,
           "Cmd-D": false,
         });
+        code_mirror.setOption("styleActiveLine", {nonEmpty: true});
         // maintain indentation on paste
         code_mirror.on("beforeChange", function(cm, change) {
           if (change.origin != "paste") {
