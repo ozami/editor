@@ -4,12 +4,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {
-    "codemirror": "^5.27.4"
-  },
-  "devDependencies": {
     "jquery": "^3.2.1",
     "mousetrap": "^1.6.1",
     "underscore": "^1.8.3",
+    "codemirror": "^5.27.4"
+  },
+  "devDependencies": {
     "browserify": "^14.4.0",
     "uglify-js": "^3.0.24",
     "watchify": "^3.7.0"
