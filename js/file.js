@@ -17,11 +17,9 @@ var FileManager = function() {
     self.reload(self.getActive());
     return false;
   }, 'keydown');
-  setTimeout(function() {
-    $.each(JSON.parse(localStorage.getItem("open-files") || "[]"), function(i, path) {
-      self.open(path);
-    });
-  }, 100);
+  $.each(JSON.parse(localStorage.getItem("open-files") || "[]"), function(i, path) {
+    self.open(path);
+  });
 };
 FileManager.prototype.open = function(path) {
   var self = this;
