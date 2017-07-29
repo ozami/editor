@@ -26,6 +26,7 @@ function grep($path)
       "items" => [],
     ];
   }
+  setlocale(LC_CTYPE, "ja_JP.UTF-8");
   chdir($dir);
   $cmd = "grep --recursive --files-with-match --extended-regexp ";
   $cmd .= "--regexp=" . escapeshellarg($query);
