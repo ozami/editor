@@ -269,3 +269,43 @@ main {
   float: right;
   padding: 0 0.5rem;
 }
+
+button.link {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-appearance: none;
+}
+button.link:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: #47b4fd;
+}
+
+.backdrop {
+  background: rgba(0, 0, 0, 0.6);
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 100;
+}
+
+.dialog {
+  background: white;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  padding: 20px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.indent-dialog {
+  width: 100px;
+  height: 100px;
+}
