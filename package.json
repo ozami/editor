@@ -4,10 +4,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {
+    "codemirror": "^5.27.4",
     "jquery": "^3.2.1",
     "mousetrap": "^1.6.1",
-    "underscore": "^1.8.3",
-    "codemirror": "^5.27.4"
+    "signals": "^1.0.0",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "browserify": "^14.4.0",

@@ -237,7 +237,7 @@ main {
 .editor-foot {
   position: absolute;
   height: 26px;
-  padding: 5px;
+  padding: 0 5px;
   left: 0;
   right: 0;
   bottom: 0;
@@ -245,6 +245,11 @@ main {
   border-top: 1px solid #ccc;
   box-sizing: border-box;
   font-size: 88%;
+}
+.editor-foot > div,
+.editor-foot > button {
+  height: 25px;
+  line-height: 25px;
 }
 .editor-message {
   float: left;
@@ -255,7 +260,7 @@ main {
   user-select: none;
   cursor: pointer;
 }
-.editor-indent {
+.editor-indent.link {
   float: right;
   letter-spacing: 2px;
   padding: 0 0.5rem;
@@ -275,13 +280,13 @@ button.link {
   background: transparent;
   cursor: pointer;
   margin: 0;
+  outline: none;
   padding: 0;
   user-select: none;
   -webkit-appearance: none;
 }
 button.link:hover {
   background: rgba(0, 0, 0, 0.1);
-  color: #47b4fd;
 }
 
 .backdrop {
@@ -303,9 +308,4 @@ button.link:hover {
   position: absolute;
   right: 0;
   top: 0;
-}
-
-.indent-dialog {
-  width: 100px;
-  height: 100px;
 }
