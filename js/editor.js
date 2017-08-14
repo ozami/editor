@@ -271,22 +271,29 @@ EditorManager.prototype.open = function(path) {
           return false;
         });
         
+        // join lines
         Mousetrap(editor[0]).bind("mod+j", function() {
-          var cursor = code_mirror.getCursor();
-          code_mirror.setCursor({line: cursor.line, ch: Infinity});
-          var next_line = code_mirror.getLine(cursor.line + 1);
-          if (next_line === undefined) {
-            return false;
-          }
-          cursor = code_mirror.getCursor();
-          var leading_spaces = next_line.match(/^\s*/)[0];
-          var to = {
-            line: cursor.line + 1,
-            ch: leading_spaces.length,
-          };
-          code_mirror.replaceRange(" ", cursor, to);
+          code_mirror.execCommand("goLineEnd");
+          var selections = code_mirror.listSelections();
+          selections.reverse();
+          selections.forEach(function(selection) {
+            var next_line = code_mirror.getLine(selection.head.line + 1);
+            if (next_line === undefined) {
+              return;
+            }
+            var leading_spaces = next_line.match(/^\s*/)[0];
+            var to = {
+              line: selection.head.line + 1,
+              ch: leading_spaces.length,
+            };
+            var this_line = code_mirror.getLine(selection.head.line);
+            var insert_space = next_line != "" && this_line != "";
+            code_mirror.replaceRange(insert_space ? " " : "", selection.head, to, "*");
+          });
+          code_mirror.execCommand("goCharLeft");
           return false;
         });
+        
         // marks
         (function() {
           var marks = [];
