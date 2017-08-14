@@ -41,21 +41,11 @@ EditorManager.prototype.open = function(path) {
         }
         return "text";
       })();
-      // calc indent size
-      var indentWithTabs = false;
-      var indentUnit = 4;
-      if (reply.content.match(/[\r\n]+\t/)) {
-        indentWithTabs = true;
-      } else {
-        indentUnit = self.calcIndentUnit(reply.content);
-      }
       (function() {
         var code_mirror = CodeMirror(editor[0], {
           value: reply.content,
           lineNumbers: true,
-          indentWithTabs: indentWithTabs,
-          tabSize: indentUnit,
-          indentUnit: indentUnit,
+          tabSize: 4,
           showCursorWhenSelecting: true,
           autoCloseBrackets: true,
           matchBrackets: true,
@@ -190,7 +180,7 @@ EditorManager.prototype.open = function(path) {
         editor.append(
           $('<div class="editor-foot">').append(
             $('<div class="editor-message">'),
-            $('<div class="editor-indent">'),
+            $('<button class="editor-indent link" type="button">'),
             $('<div class="editor-eol">'),
             $('<div class="editor-encoding">'),
             $('<div class="editor-mode">')
@@ -201,17 +191,30 @@ EditorManager.prototype.open = function(path) {
           editor.find(".editor-mode").text(mode.name);
         };
         updateModeInfo();
-        var updateIndentInfo = function() {
-          var style;
-          if (code_mirror.getOption("indentWithTabs")) {
-            style = "TAB";
-          }
-          else {
-            style = code_mirror.getOption("indentUnit") + "SP";
-          }
-          editor.find(".editor-indent").text(style);
-        };
-        updateIndentInfo();
+        
+        // indent
+        (function() {
+          var updateIndentInfo = function(type) {
+            editor.find(".editor-indent").text(type);
+          };
+          var Indent = require("./indent.js");
+          var indent = new Indent(Indent.detectIndentType(reply.content));
+          updateIndentInfo(indent.get());
+          indent.changed.add(function(type) {
+            if (type == "TAB") {
+              code_mirror.setOption("indentWithTabs", true);
+            }
+            else {
+              code_mirror.setOption("indentWithTabs", false);
+              code_mirror.setOption("indentUnit", type.replace("SP", ""));
+            }
+            updateIndentInfo(type);
+          });
+          editor.find(".editor-indent").click(function() {
+            indent.rotate();
+          });
+        })();
+        
         // line seprator
         var eol = self.detectEol(reply.content);
         var eol_names = {
@@ -294,16 +297,6 @@ EditorManager.prototype.getActive = function() {
 };
 EditorManager.prototype.close = function(path) {
   this.get(path).remove();
-};
-EditorManager.prototype.calcIndentUnit = function(content) {
-  var lines = content.split(/[\r\n]+/);
-  for (var i = 0; i < lines.length; ++i) {
-    var indent = lines[i].replace(/^( *).*/, "$1");
-    if (indent.length == 2) {
-      return 2;
-    }
-  }
-  return 4;
 };
 EditorManager.prototype.detectEol = function(content) {
   if (content.match("\r\n")) {
