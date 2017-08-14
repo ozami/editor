@@ -271,6 +271,22 @@ EditorManager.prototype.open = function(path) {
           return false;
         });
         
+        Mousetrap(editor[0]).bind("mod+j", function() {
+          var cursor = code_mirror.getCursor();
+          code_mirror.setCursor({line: cursor.line, ch: Infinity});
+          var next_line = code_mirror.getLine(cursor.line + 1);
+          if (next_line === undefined) {
+            return false;
+          }
+          cursor = code_mirror.getCursor();
+          var leading_spaces = next_line.match(/^\s*/)[0];
+          var to = {
+            line: cursor.line + 1,
+            ch: leading_spaces.length,
+          };
+          code_mirror.replaceRange(" ", cursor, to);
+          return false;
+        });
         // marks
         (function() {
           var marks = [];
