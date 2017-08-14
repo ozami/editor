@@ -270,6 +270,26 @@ EditorManager.prototype.open = function(path) {
           save();
           return false;
         });
+        
+        // marks
+        (function() {
+          var marks = [];
+          Mousetrap(editor[0]).bind("mod+m", function() {
+            var cursor = code_mirror.getCursor();
+            if (marks.length) {
+              var last = marks[marks.length - 1];
+              if (last.line == cursor.line && last.ch == cursor.ch) {
+                code_mirror.setSelections(marks.map(function(m) {
+                  return {head: m, anchor: m};
+                }), marks.length - 1);
+                marks = [];
+                return false;
+              }
+            }
+            marks.push(cursor);
+            return false;
+          });
+        })();
 
         resolve();
       })();
