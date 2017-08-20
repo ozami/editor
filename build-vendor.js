@@ -17,6 +17,7 @@ require("browserify")()
         error(err)
     }
     const minified = require("uglify-js").minify(code.toString())
+    //const minified = {code: code}
     if (minified.error) {
         error(minified.error)
     }

@@ -198,18 +198,19 @@ EditorManager.prototype.open = function(path) {
             editor.find(".editor-indent").text(type);
           };
           var Indent = require("./indent.js");
-          var indent = new Indent(Indent.detectIndentType(reply.content));
-          updateIndentInfo(indent.get());
+          var indent = new Indent();
           indent.changed.add(function(type) {
             if (type == "TAB") {
               code_mirror.setOption("indentWithTabs", true);
+              code_mirror.setOption("indentUnit", 4);
             }
             else {
               code_mirror.setOption("indentWithTabs", false);
-              code_mirror.setOption("indentUnit", type.replace("SP", ""));
+              code_mirror.setOption("indentUnit", Number(type.replace("SP", "")));
             }
             updateIndentInfo(type);
           });
+          indent.set(Indent.detectIndentType(reply.content))
           editor.find(".editor-indent").click(function() {
             indent.rotate();
           });
