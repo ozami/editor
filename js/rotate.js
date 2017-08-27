@@ -3,47 +3,50 @@
 var signals = require("signals")
 
 var Rotate = function(values, value) {
-  this.values = values
-  this.changed = new signals.Signal()
-  value = value || null
-  this.checkValue(value)
-  this.value = value
-}
-
-Rotate.prototype.getValues = function() {
-  return this.values
-}
-
-Rotate.prototype.isValidValue = function(value) {
-  return value === null || this.values.indexOf(value) != -1
-}
-
-Rotate.prototype.checkValue = function(value) {
-  if (!this.isValidValue(value)) {
-    throw "invalid value: " + value
+  var isValidValue = function(v) {
+    return v === null || values.indexOf(v) != -1
   }
-}
-
-Rotate.prototype.get = function() {
-  return this.value
-}
-
-Rotate.prototype.set = function(value) {
-  if (value == this.value) {
-    return
+  
+  var checkValue = function(v) {
+    if (!isValidValue(v)) {
+      throw "invalid value: " + v
+    }
   }
-  this.checkValue(value)
-  this.value = value
-  this.changed.dispatch(this.value)
-}
-
-Rotate.prototype.rotate = function() {
-  if (this.value === null) {
-    return
+  if (value === undefined) {
+    value = null
   }
-  var idx = this.values.indexOf(this.value)
-  idx = (idx + 1) % this.values.length
-  this.set(this.values[idx])
+  checkValue(value)
+  
+  var rotate = {
+    changed: new signals.Signal(),
+    
+    getValues: function() {
+      return values
+    },
+    
+    get: function() {
+      return value
+    },
+    
+    set: function(new_value) {
+      if (new_value == value) {
+        return
+      }
+      checkValue(new_value)
+      value = new_value
+      rotate.changed.dispatch(value)
+    },
+    
+    rotate: function() {
+      if (value === null) {
+        return
+      }
+      var idx = values.indexOf(value)
+      idx = (idx + 1) % values.length
+      rotate.set(values[idx])
+    }
+  }
+  return rotate
 }
 
 module.exports = Rotate

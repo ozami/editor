@@ -198,7 +198,7 @@ EditorManager.prototype.open = function(path) {
             editor.find(".editor-indent").text(type);
           };
           var Indent = require("./indent.js");
-          var indent = new Indent();
+          var indent = Indent();
           indent.changed.add(function(type) {
             if (type == "TAB") {
               code_mirror.setOption("indentWithTabs", true);
