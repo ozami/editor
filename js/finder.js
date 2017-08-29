@@ -1,9 +1,9 @@
 var $ = require("jquery")
-var _ = require("underscore")
 var Signal = require("signals").Signal
 var Mousetrap = require("mousetrap")
 var editor_manager = require("./editor.js")
 var FinderSuggest = require("./finder-suggest.js")
+var InputWatcher = require("./input-watcher.js")
 
 var Finder = function() {
   var model = {
@@ -56,28 +56,22 @@ var Finder = function() {
   
   // View
   
-  var path_input = $("#finder-path")
+  var path_input = $("#finder-path").val("/")
+  
+  // path watcher
+  var path_watcher = InputWatcher(path_input, 40)
+  path_watcher.changed.add(model.setPath)
   
   model.visibility_changed.add(function(visible) {
     if (visible) {
       $("#finder").addClass("active")
+      path_watcher.start()
     }
     else {
       $("#finder").removeClass("active")
+      path_watcher.stop()
     }
   })
-  
-  var last_path = path_input.val()
-  var pathChanged = _.debounce(function() {
-    model.setPath(path_input.val())
-  }, 300)
-  var path_watcher = setInterval(function() {
-    var current = path_input.val()
-    if (current != last_path) {
-      last_path = current
-      pathChanged()
-    }
-  }, 50)
   
   model.path_changed.add(function(path) {
     path_input.val(path)

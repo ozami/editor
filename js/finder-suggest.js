@@ -1,4 +1,5 @@
 var $ = require("jquery")
+var _ = require("underscore")
 var Signal = require("signals").Signal
 
 var FinderSuggest = function(finder) {
@@ -69,9 +70,13 @@ var FinderSuggest = function(finder) {
     },
   }
   
-  finder.path_changed.add(function(path) {
-    model.update(path)
+  finder.visibility_changed.add(function(visible) {
+    if (visible) {
+      model.update(finder.getPath())
+    }
   })
+  
+  finder.path_changed.add(_.debounce(model.update, 250))
   
   // view
   var list = $("#finder-items")
