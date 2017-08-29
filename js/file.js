@@ -1,5 +1,6 @@
-var $ = require("jquery")
 var signals = require("signals")
+var _ = require("underscore")
+var FileManagerView = require("./file-view.js")
 var editor_manager = require("./editor.js")
 
 var FileManager = function(finder) {
@@ -7,12 +8,13 @@ var FileManager = function(finder) {
     opened: new signals.Signal(),
     closed: new signals.Signal(),
     activated: new signals.Signal(),
+    status_changed: new signals.Signal(),
     
-    active: null,
+    active: null, // path of active file
     files: [],
     
     getFiles: function() {
-      return model.files
+      return _.pluck(model.files, "path")
     },
     
     open: function(path) {
@@ -24,7 +26,10 @@ var FileManager = function(finder) {
         return
       }
       editor_manager.open(path).then(function() {
-        model.files.push(path)
+        model.files.push({
+          path: path,
+          status: "clean",
+        })
         model.opened.dispatch(path)
         model.activate(path)
       })
@@ -38,7 +43,7 @@ var FileManager = function(finder) {
       if (path === model.active) {
         return true
       }
-      if (path !== null && model.files.indexOf(path) == -1) {
+      if (path !== null && model.indexOf(path) == -1) {
         return false
       }
       finder.setPath(path)
@@ -65,15 +70,15 @@ var FileManager = function(finder) {
         idx = next ? 0 : model.files.length - 1
       }
       else {
-        idx = model.files.indexOf(model.active)
+        idx = model.indexOf(model.active)
         idx += next ? +1 : -1
         idx = (idx + model.files.length) % model.files.length
       }
-      model.activate(model.files[idx])
+      model.activate(model.files[idx].path)
     },
     
     close: function(path) {
-      var idx = model.files.indexOf(path)
+      var idx = model.indexOf(path)
       if (idx == -1) {
         return
       }
@@ -94,50 +99,21 @@ var FileManager = function(finder) {
       model.close(path)
       model.open(path)
     },
+    
+    indexOf: function(path) {
+      return model.getFiles().indexOf(path)
+    },
+    
+    updateStatus: function(path, status) {
+      model.indexOf(path).status = status
+      model.status_changed.dispatch(path, status)
+    },
   }
   
-  // view
-  var getFileElement = function(path) {
-    return $("#files .file-item").filter(function(idx, item) {
-      return $(item).data("path") == path
-    })
-  }
+  finder.selected.add(model.open)
+  editor_manager.status_changed.add(model.updateStatus)
   
-  model.opened.add(function(path) {
-    var dir = path.replace(new RegExp("[^/]+$"), "")
-    var name = path.replace(new RegExp(".*/"), "")
-    $("<div>").data("path", path).addClass("file-item").append(
-      $("<div>").addClass("dir").text(dir),
-      $("<div>").addClass("name").text(name),
-      $('<div class="status clean">')
-    ).appendTo("#files")
-  })
-  
-  model.closed.add(function(path) {
-    getFileElement(path).remove()
-  })
-  
-  model.activated.add(function(path) {
-    $("#files .file-item.active").removeClass("active")
-    if (path === null) {
-      return
-    }
-    getFileElement(path).addClass("active")
-  })
-  
-  editor_manager.status_changed.add(function(path, status) {
-    var el = getFileElement(path)
-    el.find(".status").removeClass("clean error modified").addClass(status)
-  })
-  
-  finder.selected.add(function(path) {
-    model.open(path)
-  })
-  
-  $("#files").on("click", ".file-item", function(e) {
-    e.preventDefault()
-    model.activate($(e.currentTarget).data("path"))
-  })
+  var view = FileManagerView(model)
   
   return model
 }
