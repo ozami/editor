@@ -1,11 +1,13 @@
 var $ = require("jquery");
 var _ = require("underscore");
+var Signal = require("signals").Signal
 var CodeMirror = require("codemirror");
 require("codemirror-addon");
 require("./text-mode.js");
 
 // EditorManager
 var EditorManager = function() {
+  this.status_changed = new Signal();
 };
 EditorManager.prototype.open = function(path) {
   var self = this;
@@ -100,8 +102,7 @@ EditorManager.prototype.open = function(path) {
         });
         code_mirror.on("changes", function() {
           autoSave();
-          var file_manager = require("./file.js");
-          file_manager.setStatus(
+          self.status_changed.dispatch(
             path,
             code_mirror.isClean(code_mirror.last_save) ? "clean": "modified"
           );
@@ -245,19 +246,16 @@ EditorManager.prototype.open = function(path) {
           }).done(function(reply) {
             if (reply == "ok") {
               code_mirror.last_save = generation;
-              var file_manager = require("./file.js");
-              file_manager.setStatus(path, "clean");
+              self.status_changed.dispatch(path, "clean");
               editor.find(".editor-message").text("Saved.");
             }
             else {
               editor.find(".editor-message").text("Save failed. " + reply.error);
-              var file_manager = require("./file.js");
-              file_manager.setStatus(path, "error");
+              self.status_changed.dispatch(path, "error");
             }
           }).fail(function() {
             editor.find(".editor-message").text("Save failed.");
-            var file_manager = require("./file.js");
-            file_manager.setStatus(path, "error");
+            self.status_changed.dispatch(path, "error");
           });
         };
         // auto save

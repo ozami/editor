@@ -1,122 +1,155 @@
-var $ = require("jquery");
-var _ = require("underscore");
-var Mousetrap = require("mousetrap");
-var editor_manager = require("./editor.js");
-var file_manager = require("./file.js");
-var FinderSuggest = require("./finder-suggest.js");
+var $ = require("jquery")
+var _ = require("underscore")
+var Signal = require("signals").Signal
+var Mousetrap = require("mousetrap")
+var editor_manager = require("./editor.js")
+var FinderSuggest = require("./finder-suggest.js")
+
+var _setLastPath = function(path) {
+  localStorage.setItem("finder-path", path)
+}
+
+var _getLastPath = function() {
+  return localStorage.getItem("finder-path") || "/"
+}
 
 var Finder = function() {
-  var self = this;
-  this.path = $("#finder-path").val(this._getLastPath());
-  this.path_watcher = null;
-  this.suggest = new FinderSuggest(this);
-  
-  // open file with enter key
-  Mousetrap(this.path[0]).bind("enter", function() {
-    var path = self.suggest.getSelection();
-    if (path) {
-      self.suggestSelected(path);
-    } else {
-      file_manager.open(self.path.val());
-      self.hide();
-    }
-    return false;
-  });
-  
-  // path completion with tab key
-  Mousetrap(this.path[0]).bind("tab", function() {
-    var path = self.path.val();
-    self.suggest.fetch(path).then(function(suggest) {
-      if (suggest.items.length == 0) {
-        return;
+  var model = {
+    selected: new Signal(),
+    path_changed: new Signal(),
+    visibility_changed: new Signal(),
+    
+    path: "",
+    visible: false,
+    
+    select: function(path) {
+      model.setPath(path)
+      if (path.substr(-1) == "/") {
+        return
       }
-      if (suggest.items.length == 1) {
-        self.setPath(suggest.base + suggest.items[0]);
-        return;
-      }
-    }).catch(function() {
-      console.log("completion failed.");
-    });
-    return false;
-  });
-  //
-  Mousetrap(this.path[0]).bind("mod+u", function() {
-    var path = self.path.val();
-    path = path.replace(new RegExp("[^/]*/?$"), "");
-    self.path.val(path);
-    return false;
-  });
-  // show finder
-  Mousetrap.bind(["mod+o", "mod+p"], function() {
-    self.show();
-    self.path.focus();
-    return false;
-  });
-  
-  // hide on blur
-  self.path.blur(function() {
-    self.hide();
-  });
-  
-  // select item with up/down key
-  Mousetrap(this.path[0]).bind("down", function() {
-    self.suggest.moveSelect(true);
-    return false;
-  });
-  Mousetrap(this.path[0]).bind("up", function() {
-    self.suggest.moveSelect(false);
-    return false;
-  });
-  
-  // quit finder with esc key
-  Mousetrap(this.path[0]).bind("esc", function() {
-    self.hide();
-    editor_manager.activate(editor_manager.getActive());
-    return false;
-  });
-};
-
-Finder.prototype.suggestSelected = function(path) {
-  this.setPath(path);
-  if (path.substr(-1) != "/") {
-    file_manager.open(path);
+      model.hide()
+      model.selected.dispatch(path)
+    },
+    
+    show: function() {
+      model.visible = true
+      model.visibility_changed.dispatch(model.visible)
+    },
+    
+    hide: function() {
+      model.visible = false
+      model.visibility_changed.dispatch(model.visible)
+    },
+    
+    getPath: function() {
+      return model.path
+    },
+    
+    setPath: function(path) {
+      model.path = path
+      model.path_changed.dispatch(path)
+    },
+    
+    goToParentDirectory: function() {
+      model.setPath(
+        model.path.replace(new RegExp("[^/]*/?$"), "")
+      )
+    },
   }
-};
-
-Finder.prototype.show = function() {
-  var self = this;
-  $("#finder").addClass("active");
+  
+  var suggest = FinderSuggest(model)
+  suggest.selected.add(function(path) {
+    model.select(path)
+  })
+  
+  // View
+  
+  var path_input = $("#finder-path").val(_getLastPath())
+  
+  model.visibility_changed.add(function(visible) {
+    if (visible) {
+      $("#finder").addClass("active")
+    }
+    else {
+      $("#finder").removeClass("active")
+    }
+  })
   
   // start suggest
   var pathChanged = _.debounce(function() {
-    self.suggest.update(self.path.val());
-  }, 300);
-  clearInterval(self.path_watcher);
-  self.path_watcher = setInterval(function() {
-    var current = self.path.val();
-    if (current != self._getLastPath()) {
-      self._setLastPath(current);
-      pathChanged();
+    model.setPath(path_input.val())
+  }, 300)
+  var path_watcher = setInterval(function() {
+    var current = path_input.val()
+    if (current != _getLastPath()) {
+      _setLastPath(current)
+      pathChanged()
     }
-  }, 50);
-};
+  }, 50)
+  
+  model.path_changed.add(function(path) {
+    path_input.val(path)
+  })
+  
+  // open file with enter key
+  Mousetrap(path_input[0]).bind("enter", function() {
+    var path = suggest.getCursor()
+    model.select(path ? path : path_input.val())
+    return false
+  })
+  
+  // path completion with tab key
+  Mousetrap(path_input[0]).bind("tab", function() {
+    var cursor = suggest.getCursor()
+    if (cursor) {
+      model.setPath(cursor)
+      return false
+    }
+    var items = suggest.getItems()
+    if (items.length == 1) {
+      model.setPath(items[0])
+      return false
+    }
+    suggest.update(path_input.val())
+    return false
+  })
+  
+  // quit finder with esc key
+  Mousetrap(path_input[0]).bind("esc", function() {
+    model.hide()
+    editor_manager.activate(editor_manager.getActive())
+    return false
+  })
+  
+  // select item with up/down key
+  Mousetrap(path_input[0]).bind("down", function() {
+    suggest.moveCursor(true)
+    return false
+  })
+  Mousetrap(path_input[0]).bind("up", function() {
+    suggest.moveCursor(false)
+    return false
+  })
+  
+  //
+  Mousetrap(path_input[0]).bind("mod+u", function() {
+    model.goToParentDirectory()
+    return false
+  })
+  
+  // focus on shown
+  model.visibility_changed.add(function(visible) {
+    if (visible) {
+      path_input.focus()
+    }
+  })
+  
+  // hide on blur
+  path_input.blur(function() {
+    model.hide()
+  })
+  
+  return model
+}
 
-Finder.prototype.hide = function(item) {
-  $("#finder").removeClass("active");
-};
-
-Finder.prototype.setPath = function(path) {
-  this.path.val(path);
-  this._setLastPath(path);
-  this.suggest.update(path);
-};
-
-Finder.prototype._getLastPath = function() {
-  return localStorage.getItem("finder-path") || "/";
-};
-
-Finder.prototype._setLastPath = function(path) {
-  localStorage.setItem("finder-path", path);
-};
-
-module.exports = new Finder();
+module.exports = Finder

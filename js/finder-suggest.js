@@ -1,107 +1,136 @@
-var $ = require("jquery");
-var _ = require("underscore");
+var $ = require("jquery")
+var Signal = require("signals").Signal
 
 var FinderSuggest = function(finder) {
-  var self = this;
-  this.finder = finder;
-  this.items = $("#finder-items");
+  var model = {
+    items: [],
+    cursor: null, // highlighted item
+    
+    items_changed: new Signal(),
+    cursor_moved: new Signal(),
+    selected: new Signal(),
+    
+    update: function(path) {
+      $.ajax({
+        method: "post",
+        url: "/finder.php",
+        timeout: 3000,
+        data: {
+          path: path,
+        },
+        dataType: "json",
+      }).fail(function() {
+        console.log("failed to fetch suggest for the path: " + path)
+      }).done(function(reply) {
+        model.setItems(reply.items.map(function(i) {
+          return reply.base + i
+        }))
+      })
+    },
+    
+    setItems: function(items) {
+      model.setCursor(null)
+      model.items = items
+      model.items_changed.dispatch(model.items)
+    },
+    
+    getItems: function() {
+      return model.items
+    },
+    
+    getCursor: function() {
+      return model.cursor
+    },
+    
+    setCursor: function(path) {
+      if (path === model.cursor) {
+        return
+      }
+      model.cursor = path
+      model.cursor_moved.dispatch(model.cursor)
+    },
+    
+    moveCursor: function(next) {
+      if (model.cursor === null) {
+        if (model.items.length != 0) {
+          model.setCursor(model.items[0])
+        }
+        return
+      }
+      var idx = model.items.indexOf(model.cursor)
+      idx += next ? +1 : -1
+      idx = Math.max(0, Math.min(model.items.length - 1, idx))
+      model.setCursor(model.items[idx])
+    },
+    
+    select: function(path) {
+      model.setCursor(path)
+      model.selected.dispatch(path)
+    },
+  }
   
-  // when finder item was selected
-  this.items.on("click", "a", function(e) {
-    e.preventDefault();
-    self.finder.suggestSelected($(e.target).data("path"));
-  });
-  // prevent lost focus
-  this.items.on("mousedown", "a", function(e) {
-    e.preventDefault();
-  });
-};
-
-FinderSuggest.prototype.getSelection = function() {
-  if (!this.items.hasClass("active")) {
-    return null;
-  }
-  var selected = this.items.find("a.selected");
-  if (selected.length == 0) {
-    return null;
-  }
-  return selected.data("path");
-};
-
-FinderSuggest.prototype.fetch = function(path) {
-  var self = this;
-  return new Promise(function(resolve, reject) {
-    $.ajax({
-      method: "post",
-      url: "/finder.php",
-      timeout: 3000,
-      data: {
-        path: path
-      },
-      dataType: "json"
-    }).fail(function() {
-      console.log("failed to fetch suggest: " + path);
-      reject();
-    }).done(resolve);
-  });
-};
-
-FinderSuggest.prototype.update = function(path) {
-  var self = this;
-  var empty = function() {
-    self.items.removeClass("active");
-    self.items.empty();
-  };
-  self.fetch(path).then(function(suggest) {
-    if (suggest.items.length == 0) {
-      empty();
-      return;
+  finder.path_changed.add(function(path) {
+    model.update(path)
+  })
+  
+  // view
+  var list = $("#finder-items")
+  model.items_changed.add(function(items) {
+    list.removeClass("active").empty()
+    if (items.length == 0) {
+      return
     }
-    if (suggest.items.length == 1 && suggest.base + suggest.items[0] == path) {
-      empty();
-      return;
+    if (items.length == 1 && items[0] == model.getCursor()) {
+      return
     }
-    // got some suggestion
-    self.items.empty();
-    _.each(suggest.items, function(item) {
-      $("#finder-items").append(
-        $("<a>").text(item).data({
-          path: suggest.base + item,
-        })
-      );
-    });
-    $("#finder-items").scrollTop(0).addClass("active");
-  }).catch(function() {
-    empty();
-  });
-};
+    var name_rx = new RegExp("/([^/]*/?)$")
+    list.append(items.map(function(item) {
+      var name = name_rx.exec(item)[1]
+      return $("<a>").text(name).data("path", item)
+    }))
+    list.scrollTop(0).addClass("active")
+  })
+  
+  model.cursor_moved.add(function(path) {
+    list.find("a.selected").removeClass("selected")
+    if (path === null) {
+      return
+    }
+    var a = list.find("a").filter(function() {
+      return $(this).data("path") == path
+    })
+    if (a.length == 0) {
+      return
+    }
+    a.addClass("selected")
+    
+    // scroll the list to make the selected item visible
+    var scrollIntoView = function(target) {
+      var height = target.height()
+      var top = target.prevAll().length * height
+      var bottom = top + height
+      var view_height = list.innerHeight()
+      if (top - list.scrollTop() < 0) {
+        list.scrollTop(top)
+      }
+      if (bottom - list.scrollTop() > view_height) {
+        list.scrollTop(bottom - view_height)
+      }
+    }
+    scrollIntoView(a)
+  })
+  
+  // when item was selected
+  list.on("click", "a", function(e) {
+    e.preventDefault()
+    model.select($(e.target).data("path"))
+  })
+  // prevent from loosing focus
+  list.on("mousedown", "a", function(e) {
+    e.preventDefault()
+  })
+  
+  return model
+}
 
-FinderSuggest.prototype.moveSelect = function(down) {
-  var target = this.items.find("a.selected");
-  if (target.length) {
-    target.removeClass("selected");
-    var t = target[down ? "next" : "prev"]();
-    if (t.length) {
-      target = t;
-    }
-  }
-  else {
-    target = this.items.find("a").first();
-  }
-  if (target.length) {
-    target.addClass("selected");
-    // scroll items pane to make the selected item visible
-    var height = target.height();
-    var top = target.prevAll().length * height;
-    var bottom = top + height;
-    var view_height = this.items.innerHeight();
-    if (top - this.items.scrollTop() < 0) {
-      this.items.scrollTop(top);
-    }
-    if (bottom - this.items.scrollTop() > view_height) {
-      this.items.scrollTop(bottom - view_height);
-    }
-  }
-};
-
-module.exports = FinderSuggest;
+module.exports = FinderSuggest

@@ -1,110 +1,145 @@
-var $ = require("jquery");
-var editor_manager = require("./editor.js");
-var Mousetrap = require("mousetrap");
+var $ = require("jquery")
+var signals = require("signals")
+var editor_manager = require("./editor.js")
 
-// FileManager
-var FileManager = function() {
-  var self = this;
-  $("#files").on("click", ".file-item", function(e) {
-    e.preventDefault();
-    self.open($(e.currentTarget).data("path"));
-  });
-  Mousetrap.bind(["mod+w", "mod+k"], function() {
-    self.close(self.getActive());
-    return false;
-  }, 'keydown');
-  Mousetrap.bind(["mod+r"], function() {
-    self.reload(self.getActive());
-    return false;
-  }, 'keydown');
-  $.each(JSON.parse(localStorage.getItem("open-files") || "[]"), function(i, path) {
-    self.open(path);
-  });
-};
-FileManager.prototype.open = function(path) {
-  var self = this;
-  // try to activate opening files
-  if (this.activate(path)) {
-    return;
+var FileManager = function(finder) {
+  var model = {
+    opened: new signals.Signal(),
+    closed: new signals.Signal(),
+    activated: new signals.Signal(),
+    
+    active: null,
+    files: [],
+    
+    getFiles: function() {
+      return model.files
+    },
+    
+    open: function(path) {
+      if (path === null) {
+        throw "The path is null"
+      }
+      // try to activate already opened files
+      if (model.activate(path)) {
+        return
+      }
+      editor_manager.open(path).then(function() {
+        model.files.push(path)
+        model.opened.dispatch(path)
+        model.activate(path)
+      })
+    },
+    
+    getActive: function() {
+      return model.active
+    },
+    
+    activate: function(path) {
+      if (path === model.active) {
+        return true
+      }
+      if (path !== null && model.files.indexOf(path) == -1) {
+        return false
+      }
+      finder.setPath(path)
+      editor_manager.activate(path)
+      model.active = path
+      model.activated.dispatch(path)
+      return true
+    },
+    
+    nextFile: function() {
+      model.rotateFile(true)
+    },
+    
+    prevFile: function() {
+      model.rotateFile(false)
+    },
+    
+    rotateFile: function(next) {
+      if (model.files.length == 0) {
+        return
+      }
+      var idx
+      if (model.active === null) {
+        idx = next ? 0 : model.files.length - 1
+      }
+      else {
+        idx = model.files.indexOf(model.active)
+        idx += next ? +1 : -1
+        idx = (idx + model.files.length) % model.files.length
+      }
+      model.activate(model.files[idx])
+    },
+    
+    close: function(path) {
+      var idx = model.files.indexOf(path)
+      if (idx == -1) {
+        return
+      }
+      if (path === model.active) {
+        if (model.files.length == 1) {
+          model.activate(null)
+        }
+        else {
+          model.prevFile()
+        }
+      }
+      editor_manager.close(path)
+      model.files.splice(idx, 1)
+      model.closed.dispatch(path)
+    },
+    
+    reload: function(path) {
+      model.close(path)
+      model.open(path)
+    },
   }
-  editor_manager.open(path).then(function() {
-    var dir = path.replace(new RegExp("[^/]+$"), "");
-    var name = path.replace(new RegExp(".*/"), "");
+  
+  // view
+  var getFileElement = function(path) {
+    return $("#files .file-item").filter(function(idx, item) {
+      return $(item).data("path") == path
+    })
+  }
+  
+  model.opened.add(function(path) {
+    var dir = path.replace(new RegExp("[^/]+$"), "")
+    var name = path.replace(new RegExp(".*/"), "")
     $("<div>").data("path", path).addClass("file-item").append(
       $("<div>").addClass("dir").text(dir),
       $("<div>").addClass("name").text(name),
       $('<div class="status clean">')
-    ).appendTo("#files");
-    self.activate(path);
-    self._saveFileList();
-  });
-};
-FileManager.prototype.get = function(path) {
-  return $("#files .file-item").filter(function(idx, item) {
-    return $(item).data("path") == path;
-  });
-};
-FileManager.prototype.getActive = function() {
-  return $("#files .file-item.active").data("path");
-};
-FileManager.prototype.activate = function(path) {
-  var file = this.get(path);
-  if (file.length == 0) {
-    return false;
-  }
-  $("#files .file-item.active").removeClass("active");
-  file.addClass("active");
-  editor_manager.activate(path);
-  var finder = require("./finder.js");
-  finder.setPath(path);
-  return true;
-};
-FileManager.prototype.nextFile = function() {
-  this.rotateFile(true);
-};
-FileManager.prototype.prevFile = function() {
-  this.rotateFile(false);
-};
-FileManager.prototype.rotateFile = function(next) {
-  var dir = next ? "next" : "prev";
-  var target = $("#files .file-item.active")[dir]();
-  if (target.length == 0) {
-    dir = next ? "first" : "last";
-    target = $("#files .file-item")[dir]();
-    if (target.length == 0) {
-      return;
+    ).appendTo("#files")
+  })
+  
+  model.closed.add(function(path) {
+    getFileElement(path).remove()
+  })
+  
+  model.activated.add(function(path) {
+    $("#files .file-item.active").removeClass("active")
+    if (path === null) {
+      return
     }
-  }
-  this.activate(target.data("path"));
-};
-FileManager.prototype.setStatus = function(path, status) {
-  var file = $("#files .file-item").filter(function(idx, item) {
-    return $(item).data("path") == path;
-  });
-  file.find(".status").removeClass("clean error modified").addClass(status);
-};
-FileManager.prototype.close = function(path) {
-  var target = this.get(path);
-  if (target.length == 0) {
-    return;
-  }
-  if (target.hasClass("active")) {
-    this.prevFile();
-  }
-  target.remove();
-  editor_manager.close(path);
-  this._saveFileList();
-};
+    getFileElement(path).addClass("active")
+  })
+  
+  editor_manager.status_changed.add(function(path, status) {
+    var el = getFileElement(path)
+    el.find(".status").removeClass("clean error modified").addClass(status)
+  })
+  
+  finder.selected.add(function(path) {
+    model.open(path)
+  })
+  
+  $("#files").on("click", ".file-item", function(e) {
+    e.preventDefault()
+    model.activate($(e.currentTarget).data("path"))
+  })
+  
+  return model
+}
 
-FileManager.prototype.reload = function(path) {
-  this.close(path);
-  this.open(path);
-};
-
-FileManager.prototype._saveFileList = function() {
-  var files = $.map($("#files .file-item"), function(item) {
-    return $(item).data("path");
-  });
-  localStorage.setItem("open-files", JSON.stringify(files));
-};
-module.exports = new FileManager();
+module.exports = FileManager
