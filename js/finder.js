@@ -5,14 +5,6 @@ var Mousetrap = require("mousetrap")
 var editor_manager = require("./editor.js")
 var FinderSuggest = require("./finder-suggest.js")
 
-var _setLastPath = function(path) {
-  localStorage.setItem("finder-path", path)
-}
-
-var _getLastPath = function() {
-  return localStorage.getItem("finder-path") || "/"
-}
-
 var Finder = function() {
   var model = {
     selected: new Signal(),
@@ -64,7 +56,7 @@ var Finder = function() {
   
   // View
   
-  var path_input = $("#finder-path").val(_getLastPath())
+  var path_input = $("#finder-path")
   
   model.visibility_changed.add(function(visible) {
     if (visible) {
@@ -75,14 +67,14 @@ var Finder = function() {
     }
   })
   
-  // start suggest
+  var last_path = path_input.val()
   var pathChanged = _.debounce(function() {
     model.setPath(path_input.val())
   }, 300)
   var path_watcher = setInterval(function() {
     var current = path_input.val()
-    if (current != _getLastPath()) {
-      _setLastPath(current)
+    if (current != last_path) {
+      last_path = current
       pathChanged()
     }
   }, 50)
