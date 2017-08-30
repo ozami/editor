@@ -1,9 +1,7 @@
-var $ = require("jquery")
 var Signal = require("signals").Signal
-var Mousetrap = require("mousetrap")
 var editor_manager = require("./editor.js")
+var FinderView = require("./finder-view.js")
 var FinderSuggest = require("./finder-suggest.js")
-var InputWatcher = require("./input-watcher.js")
 
 var Finder = function() {
   var model = {
@@ -31,6 +29,7 @@ var Finder = function() {
     hide: function() {
       model.visible = false
       model.visibility_changed.dispatch(model.visible)
+      editor_manager.activate(editor_manager.getActive())
     },
     
     getPath: function() {
@@ -47,6 +46,25 @@ var Finder = function() {
         model.path.replace(new RegExp("[^/]*/?$"), "")
       )
     },
+    
+    enter: function() {
+      var path = suggest.getCursor()
+      model.select(path ? path : model.path)
+    },
+    
+    tab: function() {
+      var cursor = suggest.getCursor()
+      if (cursor) {
+        model.setPath(cursor)
+        return
+      }
+      var items = suggest.getItems()
+      if (items.length == 1) {
+        model.setPath(items[0])
+        return
+      }
+      suggest.update(model.path)
+    },
   }
   
   var suggest = FinderSuggest(model)
@@ -54,86 +72,7 @@ var Finder = function() {
     model.select(path)
   })
   
-  // View
-  
-  var path_input = $("#finder-path").val("/")
-  
-  // path watcher
-  var path_watcher = InputWatcher(path_input, 40)
-  path_watcher.changed.add(model.setPath)
-  
-  model.visibility_changed.add(function(visible) {
-    if (visible) {
-      $("#finder").addClass("active")
-      path_watcher.start()
-    }
-    else {
-      $("#finder").removeClass("active")
-      path_watcher.stop()
-    }
-  })
-  
-  model.path_changed.add(function(path) {
-    path_input.val(path)
-  })
-  
-  // open file with enter key
-  Mousetrap(path_input[0]).bind("enter", function() {
-    var path = suggest.getCursor()
-    model.select(path ? path : path_input.val())
-    return false
-  })
-  
-  // path completion with tab key
-  Mousetrap(path_input[0]).bind("tab", function() {
-    var cursor = suggest.getCursor()
-    if (cursor) {
-      model.setPath(cursor)
-      return false
-    }
-    var items = suggest.getItems()
-    if (items.length == 1) {
-      model.setPath(items[0])
-      return false
-    }
-    suggest.update(path_input.val())
-    return false
-  })
-  
-  // quit finder with esc key
-  Mousetrap(path_input[0]).bind("esc", function() {
-    model.hide()
-    editor_manager.activate(editor_manager.getActive())
-    return false
-  })
-  
-  // select item with up/down key
-  Mousetrap(path_input[0]).bind("down", function() {
-    suggest.moveCursor(true)
-    return false
-  })
-  Mousetrap(path_input[0]).bind("up", function() {
-    suggest.moveCursor(false)
-    return false
-  })
-  
-  //
-  Mousetrap(path_input[0]).bind("mod+u", function() {
-    model.goToParentDirectory()
-    return false
-  })
-  
-  // focus on shown
-  model.visibility_changed.add(function(visible) {
-    if (visible) {
-      path_input.focus()
-    }
-  })
-  
-  // hide on blur
-  path_input.blur(function() {
-    model.hide()
-  })
+  var view = FinderView(model, suggest)
   
   return model
 }

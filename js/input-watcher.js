@@ -30,7 +30,16 @@ var InputWatcher = function(input, interval) {
       model.changed.dispatch(current, model.last_value)
       model.last_value = current
     },
+    
+    keyDown: function() {
+      if (model.timer) {
+        model.check()
+      }
+    },
   }
+  
+  input.keydown(model.keyDown)
+  
   return model
 }
 
