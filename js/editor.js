@@ -4,6 +4,7 @@ var Signal = require("signals").Signal
 var CodeMirror = require("codemirror");
 require("codemirror-addon");
 require("./codemirror/select-line.js")
+require("./codemirror/select-word.js")
 require("./codemirror/split-into-lines.js")
 require("./text-mode.js");
 
@@ -128,11 +129,7 @@ EditorManager.prototype.open = function(path) {
           return false;
         });
         Mousetrap(cm_input).bind("mod+d", function() {
-          code_mirror.setSelections(
-            code_mirror.listSelections().map(function(i) {
-              return code_mirror.findWordAt(i.anchor);
-            })
-          );
+          code_mirror.execCommand("selectWord");
           return false;
         });
         Mousetrap(cm_input).bind("mod+l", function() {
