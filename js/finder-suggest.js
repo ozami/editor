@@ -1,6 +1,7 @@
-var $ = require("jquery")
 var _ = require("underscore")
+var $ = require("jquery")
 var Signal = require("signals").Signal
+var FinderSuggestView = require("./finder-suggest-view.js")
 
 var FinderSuggest = function(finder) {
   var model = {
@@ -78,62 +79,7 @@ var FinderSuggest = function(finder) {
   
   finder.path_changed.add(_.debounce(model.update, 250))
   
-  // view
-  var list = $("#finder-items")
-  model.items_changed.add(function(items) {
-    list.removeClass("active").empty()
-    if (items.length == 0) {
-      return
-    }
-    if (items.length == 1 && items[0] == model.getCursor()) {
-      return
-    }
-    var name_rx = new RegExp("/([^/]*/?)$")
-    list.append(items.map(function(item) {
-      var name = name_rx.exec(item)[1]
-      return $("<a>").text(name).data("path", item)
-    }))
-    list.scrollTop(0).addClass("active")
-  })
-  
-  model.cursor_moved.add(function(path) {
-    list.find("a.selected").removeClass("selected")
-    if (path === null) {
-      return
-    }
-    var a = list.find("a").filter(function() {
-      return $(this).data("path") == path
-    })
-    if (a.length == 0) {
-      return
-    }
-    a.addClass("selected")
-    
-    // scroll the list to make the selected item visible
-    var scrollIntoView = function(target) {
-      var height = target.height()
-      var top = target.prevAll().length * height
-      var bottom = top + height
-      var view_height = list.innerHeight()
-      if (top - list.scrollTop() < 0) {
-        list.scrollTop(top)
-      }
-      if (bottom - list.scrollTop() > view_height) {
-        list.scrollTop(bottom - view_height)
-      }
-    }
-    scrollIntoView(a)
-  })
-  
-  // when item was selected
-  list.on("click", "a", function(e) {
-    e.preventDefault()
-    model.select($(e.target).data("path"))
-  })
-  // prevent from loosing focus
-  list.on("mousedown", "a", function(e) {
-    e.preventDefault()
-  })
+  var view = FinderSuggestView(model)
   
   return model
 }
