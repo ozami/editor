@@ -4,6 +4,7 @@ var Signal = require("signals").Signal
 var CodeMirror = require("codemirror");
 require("codemirror-addon");
 require("./codemirror/select-line.js")
+require("./codemirror/split-into-lines.js")
 require("./text-mode.js");
 
 // EditorManager
@@ -140,27 +141,7 @@ EditorManager.prototype.open = function(path) {
         });
         
         Mousetrap(cm_input).bind("mod+shift+l", function() {
-          var selections = code_mirror.listSelections();
-          if (selections.length != 1) {
-            // Do nothing;
-            return;
-          }
-          var anchor = selections[0].anchor;
-          var head = selections[0].head;
-          var new_selections = [];
-          for (var i = anchor.line; i <= head.line; ++i) {
-            new_selections.push({
-              anchor: {
-                line: i,
-                ch: i == anchor.line ? anchor.ch : 0
-              },
-              head: {
-                line: i,
-                ch: i == head.line ? head.ch : Infinity
-              }
-            });
-          }
-          code_mirror.setSelections(new_selections);
+          code_mirror.execCommand("splitIntoLines");
           return false;
         });
         
