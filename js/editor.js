@@ -3,6 +3,7 @@ var _ = require("underscore");
 var Signal = require("signals").Signal
 var CodeMirror = require("codemirror");
 require("codemirror-addon");
+require("./codemirror/select-line.js")
 require("./text-mode.js");
 
 // EditorManager
@@ -134,20 +135,7 @@ EditorManager.prototype.open = function(path) {
           return false;
         });
         Mousetrap(cm_input).bind("mod+l", function() {
-          code_mirror.setSelections(
-            code_mirror.listSelections().map(function(i) {
-              return {
-                anchor: {
-                  line: i.head.line + 1,
-                  ch: 0
-                },
-                head: {
-                  line: i.anchor.line,
-                  ch: 0
-                }
-              };
-            })
-          );
+          code_mirror.execCommand("selectLine");
           return false;
         });
         
