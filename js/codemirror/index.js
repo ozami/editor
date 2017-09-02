@@ -30,9 +30,12 @@ Object.assign(CodeMirror.defaults, {
 })
 
 CodeMirror.defineInitHook(function(cm) {
+  // maintain indentation on paste
+  cm.on("beforeChange", require("./indent-after-paste"))
+  
+  // key bindings
   var input = cm.getInputField()
   input.className += " mousetrap" // enable hotkey
-  // key bindings
   var keymap = {
     "alt+b": "goWordLeft",
     "alt+f": "goWordRight",
