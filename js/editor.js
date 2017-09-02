@@ -1,12 +1,7 @@
 var $ = require("jquery");
 var _ = require("underscore");
 var Signal = require("signals").Signal
-var CodeMirror = require("codemirror");
-require("codemirror-addon");
-require("./codemirror/select-line.js")
-require("./codemirror/select-word.js")
-require("./codemirror/split-into-lines.js")
-require("./text-mode.js");
+var CodeMirror = require("./codemirror");
 
 // EditorManager
 var EditorManager = function() {
@@ -49,29 +44,9 @@ EditorManager.prototype.open = function(path) {
       (function() {
         var code_mirror = CodeMirror(editor[0], {
           value: reply.content,
-          lineNumbers: true,
-          tabSize: 4,
-          showCursorWhenSelecting: true,
-          autoCloseBrackets: true,
-          matchBrackets: true,
-          matchTags: true,
-          autoCloseTags: true,
-          styleActiveLine: true,
-          styleSelectedText: true,
           mode: mode,
-          dragDrop: false,
         });
         CodeMirror.registerHelper("hintWords", mode, null);
-        code_mirror.setOption("extraKeys", {
-          "Ctrl-Space": "autocomplete",
-          "Ctrl-U": "autocomplete",
-          "Ctrl-/": "toggleComment",
-          "Cmd-/": "toggleComment",
-          Tab: "indentAuto",
-          "Ctrl-D": false,
-          "Cmd-D": false,
-        });
-        code_mirror.setOption("styleActiveLine", {nonEmpty: true});
         // maintain indentation on paste
         code_mirror.on("beforeChange", function(cm, change) {
           if (change.origin != "paste") {
@@ -109,37 +84,6 @@ EditorManager.prototype.open = function(path) {
             path,
             code_mirror.isClean(code_mirror.last_save) ? "clean": "modified"
           );
-        });
-        var cm_input = code_mirror.getInputField();
-        $(cm_input).addClass("mousetrap"); // enable hotkey
-        Mousetrap(cm_input).bind("alt+b", function() {
-          code_mirror.execCommand("goWordLeft");
-          return false;
-        });
-        Mousetrap(cm_input).bind("alt+f", function() {
-          code_mirror.execCommand("goWordRight");
-          return false;
-        });
-        Mousetrap(cm_input).bind("alt+h", function() {
-          code_mirror.execCommand("delWordBefore");
-          return false;
-        });
-        Mousetrap(cm_input).bind("alt+d", function() {
-          code_mirror.execCommand("delWordAfter");
-          return false;
-        });
-        Mousetrap(cm_input).bind("mod+d", function() {
-          code_mirror.execCommand("selectWord");
-          return false;
-        });
-        Mousetrap(cm_input).bind("mod+l", function() {
-          code_mirror.execCommand("selectLine");
-          return false;
-        });
-        
-        Mousetrap(cm_input).bind("mod+shift+l", function() {
-          code_mirror.execCommand("splitIntoLines");
-          return false;
         });
         
         code_mirror.last_save = code_mirror.changeGeneration(true);
@@ -236,26 +180,6 @@ EditorManager.prototype.open = function(path) {
           return false;
         });
         
-        // marks
-        (function() {
-          var marks = [];
-          Mousetrap(editor[0]).bind("mod+m", function() {
-            var cursor = code_mirror.getCursor();
-            if (marks.length) {
-              var last = marks[marks.length - 1];
-              if (last.line == cursor.line && last.ch == cursor.ch) {
-                code_mirror.setSelections(marks.map(function(m) {
-                  return {head: m, anchor: m};
-                }), marks.length - 1);
-                marks = [];
-                return false;
-              }
-            }
-            marks.push(cursor);
-            return false;
-          });
-        })();
-
         resolve();
       })();
     }).fail(function() {

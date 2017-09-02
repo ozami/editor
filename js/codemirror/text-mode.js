@@ -1,7 +1,7 @@
-var CodeMirror = require("codemirror");
+var CodeMirror = require("codemirror")
 
 CodeMirror.defineSimpleMode("text", {
   start: [],
   comment: [],
-  meta: {}
-});
+  meta: {},
+})

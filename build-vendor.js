@@ -11,7 +11,7 @@ const vendors = require("underscore").keys(
 
 require("browserify")()
 .require(vendors)
-.require("./js/codemirror-addon.js", {expose: "codemirror-addon"})
+.require("./js/codemirror-addon", {expose: "codemirror-addon"})
 .bundle(function(err, code) {
     if (err) {
         error(err)
