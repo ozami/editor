@@ -1,14 +1,8 @@
-"use strict"
-
-var Rotate = require("./rotate.js")
+var Rotate = require("./rotate")
 
 var Indent = function(type) {
-  Rotate.call(
-    this, ["4SP", "2SP", "TAB"], type
-  )
+  return Rotate(["4SP", "2SP", "TAB"], type)
 }
-Indent.prototype = Object.create(Rotate.prototype)
-Indent.prototype.constructor = Rotate
 
 Indent.detectIndentType = function(content) {
   if (content.match(/[\r\n]+\t/)) {
