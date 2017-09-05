@@ -2,7 +2,7 @@ var $ = require("jquery")
 var _ = require("underscore")
 var EditorView = require("./editor-view")
 
-var FileManagerView = function($root, editor_mgr) {
+var EditorManagerView = function($root, editor_mgr) {
   var editors = {}
   var $tabs = $("<div>").attr("id", "files").appendTo($root)
   var $editors = $("<div>").attr("id", "editors").appendTo($root)
@@ -54,4 +54,4 @@ var FileManagerView = function($root, editor_mgr) {
   })
 }
 
-module.exports = FileManagerView
+module.exports = EditorManagerView
