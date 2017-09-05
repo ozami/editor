@@ -25,10 +25,7 @@ var Rotate = function(values, value) {
   }
   
   rotate.rotate = function() {
-    if (value === null) {
-      return
-    }
-    var idx = values.indexOf(value)
+    var idx = values.indexOf(rotate.get())
     idx = (idx + 1) % values.length
     rotate.set(values[idx])
   }
