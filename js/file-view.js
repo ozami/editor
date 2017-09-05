@@ -1,51 +1,56 @@
 var $ = require("jquery")
+var _ = require("underscore")
+var EditorView = require("./editor-view")
 
-var getFileElement = function(path) {
-  return $("#files .file-item").filter(function(idx, item) {
-    return $(item).data("path") == path
+var FileManagerView = function($root, editor_mgr) {
+  var editors = {}
+  var $tabs = $("<div>").attr("id", "files").appendTo($root)
+  var $editors = $("<div>").attr("id", "editors").appendTo($root)
+  
+  editor_mgr.opened.add(function(editor) {
+    var path = editor.getPath()
+    var dir = path.replace(new RegExp("[^/]+$"), "")
+    var name = path.replace(new RegExp(".*/"), "")
+    var $tab = $("<div>").addClass("file-item").append(
+      $("<div>").addClass("dir").text(dir),
+      $("<div>").addClass("name").text(name),
+      $('<div class="status clean">')
+    ).appendTo($tabs)
+    // status in tab
+    editor.status.observe(function(status) {
+      $tab.find(".status").removeClass("clean error modified").addClass(status)
+    })
+    // editor view
+    var $editor = $("<div>").addClass("editor").appendTo($editors)
+    var editor_view = EditorView($editor, editor, editor_mgr)
+    
+    editors[path] = {
+      $tab: $tab,
+      $editor: $editor,
+    }
   })
-}
-
-var FileManagerView = function(model) {
-  var view = {
-    addItem: function(path) {
-      var dir = path.replace(new RegExp("[^/]+$"), "")
-      var name = path.replace(new RegExp(".*/"), "")
-      $("<div>").data("path", path).addClass("file-item").append(
-        $("<div>").addClass("dir").text(dir),
-        $("<div>").addClass("name").text(name),
-        $('<div class="status clean">')
-      ).appendTo("#files")
-    },
-    
-    removeItem: function(path) {
-      getFileElement(path).remove()
-    },
-    
-    activateItem: function(path) {
-      $("#files .file-item.active").removeClass("active")
-      if (path === null) {
-        return
-      }
-      getFileElement(path).addClass("active")
-    },
-    
-    updateStatus: function(path, status) {
-      getFileElement(path)
-        .find(".status")
-        .removeClass("clean error modified")
-        .addClass(status)
-    },
-  }
   
-  model.opened.add(view.addItem)
-  model.closed.add(view.removeItem)
-  model.activated.add(view.activateItem)
-  model.status_changed.add(view.updateStatus)
+  editor_mgr.closed.add(function(path) {
+    editors[path].$tab.remove()
+    editors[path].$editor.remove()
+    delete editors[path]
+  })
   
-  $("#files").on("click", ".file-item", function(e) {
+  editor_mgr.activated.add(function(path) {
+    $tabs.find(".file-item.active").removeClass("active")
+    if (path === null) {
+      return
+    }
+    editors[path].$tab.addClass("active")
+  })
+  
+  $tabs.on("click", ".file-item", function(e) {
     e.preventDefault()
-    model.activate($(e.currentTarget).data("path"))
+    var $target = $(e.currentTarget)
+    var path = _.findKey(editors, function(i) {
+      return i.$tab.is($target)
+    })
+    editor_mgr.activate(path)
   })
 }
 

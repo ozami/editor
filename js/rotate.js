@@ -1,10 +1,8 @@
-"use strict"
-
-var signals = require("signals")
+var Observable = require("./observable")
 
 var Rotate = function(values, value) {
   var isValidValue = function(v) {
-    return v === null || values.indexOf(v) != -1
+    return v === null || v === undefined || values.indexOf(v) != -1
   }
   
   var checkValue = function(v) {
@@ -12,40 +10,29 @@ var Rotate = function(values, value) {
       throw "invalid value: " + v
     }
   }
-  if (value === undefined) {
-    value = null
-  }
   checkValue(value)
   
-  var rotate = {
-    changed: new signals.Signal(),
-    
-    getValues: function() {
-      return values
-    },
-    
-    get: function() {
-      return value
-    },
-    
-    set: function(new_value) {
-      if (new_value == value) {
-        return
-      }
-      checkValue(new_value)
-      value = new_value
-      rotate.changed.dispatch(value)
-    },
-    
-    rotate: function() {
-      if (value === null) {
-        return
-      }
-      var idx = values.indexOf(value)
-      idx = (idx + 1) % values.length
-      rotate.set(values[idx])
-    }
+  var rotate = Observable(value)
+  
+  rotate.getValues = function() {
+    return values
   }
+  
+  var _set = rotate.set
+  rotate.set = function(new_value) {
+    checkValue(new_value)
+    _set(new_value)
+  }
+  
+  rotate.rotate = function() {
+    if (value === null) {
+      return
+    }
+    var idx = values.indexOf(value)
+    idx = (idx + 1) % values.length
+    rotate.set(values[idx])
+  }
+  
   return rotate
 }
 

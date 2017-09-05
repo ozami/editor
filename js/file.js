@@ -1,20 +1,21 @@
 var signals = require("signals")
 var _ = require("underscore")
-var FileManagerView = require("./file-view.js")
-var editor_manager = require("./editor.js")
+var File = require("./file2")
+var Editor = require("./editor")
 
 var FileManager = function(finder) {
   var model = {
     opened: new signals.Signal(),
     closed: new signals.Signal(),
     activated: new signals.Signal(),
-    status_changed: new signals.Signal(),
     
     active: null, // path of active file
     files: [],
     
     getFiles: function() {
-      return _.pluck(model.files, "path")
+      return model.files.map(function(editor) {
+        return editor.getPath()
+      })
     },
     
     open: function(path) {
@@ -25,12 +26,10 @@ var FileManager = function(finder) {
       if (model.activate(path)) {
         return
       }
-      editor_manager.open(path).then(function() {
-        model.files.push({
-          path: path,
-          status: "clean",
-        })
-        model.opened.dispatch(path)
+      var editor = Editor(File(path))
+      editor.load().then(function() {
+        model.files.push(editor)
+        model.opened.dispatch(editor)
         model.activate(path)
       })
     },
@@ -46,10 +45,9 @@ var FileManager = function(finder) {
       if (path !== null && model.indexOf(path) == -1) {
         return false
       }
-      finder.setPath(path)
-      editor_manager.activate(path)
       model.active = path
       model.activated.dispatch(path)
+      finder.setPath(path)
       return true
     },
     
@@ -74,7 +72,7 @@ var FileManager = function(finder) {
         idx += next ? +1 : -1
         idx = (idx + model.files.length) % model.files.length
       }
-      model.activate(model.files[idx].path)
+      model.activate(model.files[idx].getPath())
     },
     
     close: function(path) {
@@ -90,7 +88,6 @@ var FileManager = function(finder) {
           model.prevFile()
         }
       }
-      editor_manager.close(path)
       model.files.splice(idx, 1)
       model.closed.dispatch(path)
     },
@@ -103,17 +100,9 @@ var FileManager = function(finder) {
     indexOf: function(path) {
       return model.getFiles().indexOf(path)
     },
-    
-    updateStatus: function(path, status) {
-      model.indexOf(path).status = status
-      model.status_changed.dispatch(path, status)
-    },
   }
   
   finder.selected.add(model.open)
-  editor_manager.status_changed.add(model.updateStatus)
-  
-  var view = FileManagerView(model)
   
   return model
 }

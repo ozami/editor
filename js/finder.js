@@ -1,5 +1,4 @@
 var Signal = require("signals").Signal
-var editor_manager = require("./editor.js")
 var FinderView = require("./finder-view.js")
 var FinderSuggest = require("./finder-suggest.js")
 
@@ -29,7 +28,7 @@ var Finder = function() {
     hide: function() {
       model.visible = false
       model.visibility_changed.dispatch(model.visible)
-      editor_manager.activate(editor_manager.getActive())
+//       editor_manager.activate(editor_manager.getActive())
     },
     
     getPath: function() {

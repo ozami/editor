@@ -1,7 +1,10 @@
+var MainView = require("./main-view")
+
 module.exports.run = function() {
   var Mousetrap = require("mousetrap")
   var finder = require("./finder.js")()
   var file_manager = require("./file.js")(finder)
+  var view = MainView(file_manager)
   
   var saveFileList = function() {
     var files = file_manager.getFiles()
@@ -31,7 +34,7 @@ module.exports.run = function() {
     return false
   }, "keydown")
   Mousetrap.bind(["mod+r"], function() {
-    file_manager.reload()
+    file_manager.reload(file_manager.getActive())
     return false
   }, "keydown")
   // show finder

@@ -1,189 +1,69 @@
 var $ = require("jquery")
 var _ = require("underscore")
-var Signal = require("signals").Signal
+var Observable = require("./observable")
 var CodeMirror = require("./codemirror")
+var Indent = require("./indent")
 
-// EditorManager
-var EditorManager = function() {
-  this.status_changed = new Signal()
-}
-EditorManager.prototype.open = function(path) {
-  var self = this
-  return new Promise(function(resolve, reject) {
-    $.ajax({
-      method: "post",
-      url: "/read.php",
-      timeout: 3000,
-      data: {
-        path: path
-      },
-      dataType: "json"
-    }).done(function(reply){
-      if (reply.error) {
-        alert(reply.error)
-        reject()
-        return
-      }
-      var encoding = reply.encoding
-      var editor = $("<div>").addClass("editor").appendTo("#editors")
-      var mode = (function() {
-        var extension = path.replace(/.*[.](.+)$/, "$1")
-        var mode = {
-          html: "php",
-          tag: "php",
-        }[extension]
-        if (mode) {
-          return mode
-        }
-        mode = CodeMirror.findModeByExtension(extension)
-        if (mode) {
-          return mode.mode
-        }
-        return "text"
-      })()
-      ;(function() {
-        var code_mirror = CodeMirror(editor[0], {
-          value: reply.content,
-          mode: mode,
-        })
-        CodeMirror.registerHelper("hintWords", mode, null)
-        code_mirror.on("changes", function() {
-          autoSave()
-          self.status_changed.dispatch(
-            path,
-            code_mirror.isClean(code_mirror.last_save) ? "clean": "modified"
-          )
-        })
-        
-        code_mirror.last_save = code_mirror.changeGeneration(true)
-        // status bar
-        editor.append(
-          $('<div class="editor-foot">').append(
-            $('<div class="editor-message">'),
-            $('<button class="editor-indent link" type="button">'),
-            $('<div class="editor-eol">'),
-            $('<div class="editor-encoding">'),
-            $('<div class="editor-mode">')
-          )
-        )
-        var updateModeInfo = function() {
-          var mode = code_mirror.getMode()
-          editor.find(".editor-mode").text(mode.name)
-        }
-        updateModeInfo()
-        
-        // indent
-        ;(function() {
-          var updateIndentInfo = function(type) {
-            editor.find(".editor-indent").text(type)
-          }
-          var Indent = require("./indent.js")
-          var indent = Indent()
-          indent.changed.add(function(type) {
-            if (type == "TAB") {
-              code_mirror.setOption("indentWithTabs", true)
-              code_mirror.setOption("indentUnit", 4)
-            }
-            else {
-              code_mirror.setOption("indentWithTabs", false)
-              code_mirror.setOption("indentUnit", Number(type.replace("SP", "")))
-            }
-            updateIndentInfo(type)
-          })
-          indent.set(Indent.detectIndentType(reply.content))
-          editor.find(".editor-indent").click(function() {
-            indent.rotate()
-          })
-        })()
-        
-        // line seprator
-        var eol = self.detectEol(reply.content)
-        var eol_names = {
-          "\r": "CR",
-          "\n": "LF",
-          "\r\n": "CRLF"
-        }
-        editor.find(".editor-eol").text(eol_names[eol])
-        // encoding
-        editor.find(".editor-encoding").text(encoding)
-        
-        editor.data("path", path)
-        editor.data("code_mirror", code_mirror)
-        // save
-        var save = function() {
-          var generation = code_mirror.changeGeneration(true)
-          $.ajax({
-            url: "/write.php",
-            method: "post",
-            timeout: 2000,
-            data: {
-              path: path,
-              encoding: encoding,
-              content: code_mirror.getValue().replace(/\n/g, eol)
-            },
-            dataType: "json"
-          }).done(function(reply) {
-            if (reply == "ok") {
-              code_mirror.last_save = generation
-              self.status_changed.dispatch(path, "clean")
-              editor.find(".editor-message").text("Saved.")
-            }
-            else {
-              editor.find(".editor-message").text("Save failed. " + reply.error)
-              self.status_changed.dispatch(path, "error")
-            }
-          }).fail(function() {
-            editor.find(".editor-message").text("Save failed.")
-            self.status_changed.dispatch(path, "error")
-          })
-        }
-        // auto save
-        var autoSave = _.debounce(function() {
-          if (!code_mirror.isClean(code_mirror.last_save)) {
-            save()
-          }
-        }, 4000)
-        // save with command-s
-        Mousetrap(editor[0]).bind("mod+s", function() {
-          save()
-          return false
-        })
-        
-        resolve()
-      })()
-    }).fail(function() {
-      reject()
-    })
+var Editor = function(file) {
+  var editor = {
+    text: Observable(""),
+    status: Observable("clean"),
+    mode: Observable("text"),
+    indent: Indent(),
+    message: Observable(""),
+    
+    getFile: function() {
+      return file
+    },
+    
+    getPath: function() {
+      return file.getPath()
+    },
+    
+    load: function(text) {
+      return file.read().then(function(text) {
+        editor.indent.set(Indent.detectIndentType(text))
+        editor.text.set(text)
+        editor.message.set("Loaded.")
+      })
+    },
+    
+    save: function() {
+      return file.write(editor.text.get()).catch(function(error) {
+        editor.message.set("Save failed. " + reply.error)
+        editor.status.set("error")
+      }).then(function() {
+        editor.status.set("clean")
+        editor.message.set("Saved.")
+      })
+    },
+  }
+  
+  var detectMode = (function(path) {
+    var extension = path.replace(/.*[.](.+)$/, "$1")
+    var mode = {
+      html: "php",
+      tag: "php",
+    }[extension]
+    if (mode) {
+      return mode
+    }
+    mode = CodeMirror.findModeByExtension(extension)
+    if (mode) {
+      return mode.mode
+    }
+    return "text"
   })
-}
-EditorManager.prototype.get = function(path) {
-  return $("#editors .editor").filter(function() {
-    return $(this).data("path") == path
-  })
-}
-EditorManager.prototype.activate = function(path) {
-  $("#editors .editor.active").removeClass("active")
-  var found = this.get(path)
-  if (found.length) {
-    found.addClass("active")
-    found.data("code_mirror").focus()
-    found.data("code_mirror").refresh()
-  }
-}
-EditorManager.prototype.getActive = function() {
-  return $("#editors .editor.active").data("path")
-}
-EditorManager.prototype.close = function(path) {
-  this.get(path).remove()
-}
-EditorManager.prototype.detectEol = function(content) {
-  if (content.match("\r\n")) {
-    return "\r\n"
-  }
-  if (content.match("\r")) {
-    return "\r"
-  }
-  return "\n"
+  editor.mode.set(detectMode(file.getPath()))
+  
+  // auto save
+  editor.text.observe(_.debounce(function() {
+    if (editor.status.get() != "clean") {
+      editor.save()
+    }
+  }, 4000))
+  
+  return editor
 }
 
-module.exports = new EditorManager()
+module.exports = Editor
