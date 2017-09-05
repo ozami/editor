@@ -1,5 +1,5 @@
 var $ = require("jquery")
-var EditorManagerView = require("./file-view")
+var EditorManagerView = require("./editor-manager-view")
 
 var MainView = function(editor_mgr) {
   var $main = $("main")
