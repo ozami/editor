@@ -14,7 +14,7 @@ var EditorView = function($root, editor, editor_mgr) {
     $('<div class="editor-foot">').append(
       $('<div class="editor-message">'),
       $('<button class="editor-indent link" type="button">'),
-      $('<div class="editor-eol">'),
+      $('<button class="editor-eol link" type="button">'),
       $('<div class="editor-encoding">'),
       $('<div class="editor-mode">')
     )
@@ -76,8 +76,11 @@ var EditorView = function($root, editor, editor_mgr) {
     }
     $root.find(".editor-eol").text(names[eol])
   }
-  file.eol.add(updateEol)
+  file.eol.observe(updateEol)
   updateEol(file.eol.get())
+  $root.find(".editor-eol").click(function() {
+    file.eol.rotate()
+  })
   
   // encoding
   var updateEncoding = function(encoding) {
