@@ -1,11 +1,12 @@
+var Mousetrap = require("mousetrap")
 var EditorManager = require("./editor-manager")
+var Finder = require("./finder")
 var MainView = require("./main-view")
 
 module.exports.run = function() {
-  var Mousetrap = require("mousetrap")
-  var finder = require("./finder.js")()
+  var finder = Finder()
   var editor_mgr = EditorManager(finder)
-  var view = MainView(editor_mgr)
+  var view = MainView(editor_mgr, finder)
   
   var saveFileList = function() {
     var files = editor_mgr.getFiles()

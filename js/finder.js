@@ -1,6 +1,5 @@
 var Signal = require("signals").Signal
-var FinderView = require("./finder-view.js")
-var FinderSuggest = require("./finder-suggest.js")
+var FinderSuggest = require("./finder-suggest")
 
 var Finder = function() {
   var model = {
@@ -66,12 +65,10 @@ var Finder = function() {
     },
   }
   
-  var suggest = FinderSuggest(model)
+  var suggest = model.suggest = FinderSuggest(model)
   suggest.selected.add(function(path) {
     model.select(path)
   })
-  
-  var view = FinderView(model, suggest)
   
   return model
 }

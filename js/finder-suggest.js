@@ -1,7 +1,6 @@
 var _ = require("underscore")
 var $ = require("jquery")
 var Signal = require("signals").Signal
-var FinderSuggestView = require("./finder-suggest-view.js")
 
 var FinderSuggest = function(finder) {
   var model = {
@@ -78,8 +77,6 @@ var FinderSuggest = function(finder) {
   })
   
   finder.path_changed.add(_.debounce(model.update, 250))
-  
-  var view = FinderSuggestView(model)
   
   return model
 }

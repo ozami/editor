@@ -1,9 +1,17 @@
 var $ = require("jquery")
 var EditorManagerView = require("./editor-manager-view")
+var FinderView = require("./finder-view")
 
-var MainView = function(editor_mgr) {
+var MainView = function(editor_mgr, finder) {
   var $main = $("main")
-  var editor_mgr_view = EditorManagerView($main, editor_mgr)
+  EditorManagerView(
+    $('<div id="editor_manager">').appendTo($main),
+    editor_mgr
+  )
+  FinderView(
+    $('<form id="finder">').appendTo($main),
+    finder
+  )
   
   // shortcut keys
   Mousetrap.bind(["mod+", "mod+="], function() {

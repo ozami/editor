@@ -1,11 +1,11 @@
 var $ = require("jquery")
 
-var FinderSuggestView = function(model) {
-  var list = $("#finder-items")
+var FinderSuggestView = function($root, model) {
+  var $list = $root
   
   var view = {
     updateItems: function(items) {
-      list.removeClass("active").empty()
+      $list.removeClass("active").empty()
       if (items.length == 0) {
         return
       }
@@ -13,19 +13,19 @@ var FinderSuggestView = function(model) {
         return
       }
       var name_rx = new RegExp("/([^/]*/?)$")
-      list.append(items.map(function(item) {
+      $list.append(items.map(function(item) {
         var name = name_rx.exec(item)[1]
         return $("<a>").text(name).data("path", item)
       }))
-      list.scrollTop(0).addClass("active")
+      $list.scrollTop(0).addClass("active")
     },
     
     updateCursor: function(path) {
-      list.find("a.selected").removeClass("selected")
+      $list.find("a.selected").removeClass("selected")
       if (path === null) {
         return
       }
-      var a = list.find("a").filter(function() {
+      var a = $list.find("a").filter(function() {
         return $(this).data("path") == path
       })
       if (a.length == 0) {
@@ -38,12 +38,12 @@ var FinderSuggestView = function(model) {
         var height = target.height()
         var top = target.prevAll().length * height
         var bottom = top + height
-        var view_height = list.innerHeight()
-        if (top - list.scrollTop() < 0) {
-          list.scrollTop(top)
+        var view_height = $list.innerHeight()
+        if (top - $list.scrollTop() < 0) {
+          $list.scrollTop(top)
         }
-        if (bottom - list.scrollTop() > view_height) {
-          list.scrollTop(bottom - view_height)
+        if (bottom - $list.scrollTop() > view_height) {
+          $list.scrollTop(bottom - view_height)
         }
       }
       scrollIntoView(a)
@@ -54,13 +54,13 @@ var FinderSuggestView = function(model) {
   model.cursor_moved.add(view.updateCursor)
   
   // when item was selected
-  list.on("click", "a", function(e) {
+  $list.on("click", "a", function(e) {
     e.preventDefault()
     model.select($(e.target).data("path"))
   })
   
   // prevent from loosing focus
-  list.on("mousedown", "a", function(e) {
+  $list.on("mousedown", "a", function(e) {
     e.preventDefault()
   })
   
