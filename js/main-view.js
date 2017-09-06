@@ -14,11 +14,11 @@ var MainView = function(editor_mgr, finder) {
   )
   
   // shortcut keys
-  Mousetrap.bind(["mod+", "mod+="], function() {
+  Mousetrap.bind(["mod+;", "mod+="], function() {
     editor_mgr.nextFile()
     return false
   }, "keydown")
-  Mousetrap.bind(["mod+shift+", "mod+shift+="], function() {
+  Mousetrap.bind(["mod+shift+;", "mod+shift+="], function() {
     editor_mgr.prevFile()
     return false
   }, "keydown")
