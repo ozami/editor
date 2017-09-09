@@ -3,6 +3,7 @@ var _ = require("underscore")
 var Observable = require("./observable")
 var CodeMirror = require("./codemirror")
 var Indent = require("./indent")
+var SelectEncodingDialog = require("./select-encoding-dialog")
 
 var Editor = function(file) {
   var editor = {
@@ -11,6 +12,7 @@ var Editor = function(file) {
     mode: Observable("text"),
     indent: Indent(),
     message: Observable(""),
+    select_encoding_dialog: SelectEncodingDialog(),
     
     getFile: function() {
       return file

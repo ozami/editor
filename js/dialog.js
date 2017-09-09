@@ -1,18 +1,18 @@
 var $ = require("jquery")
 
-var open = function(content, class_name) {
-  var backdrop = $("<div>").addClass("backdrop")
-  var dialog = $("<div>").addClass("dialog")
-  if (class_name) {
-    dialog.addClass(class_name)
-  }
-  dialog.append(content)
-  backdrop.append(dialog)
-  $(document.body).append(backdrop)
+var open = function(content) {
   var close = function() {
     backdrop.remove()
   }
   return close
 }
 
-module.exports.open = open
+var view = function(content, class_name) {
+  var backdrop = $('<div class="backdrop">').appendTo(document.body)
+  var dialog = $('<div class="dialog">').appendTo(backdrop)
+  dialog.addClass(class_name)
+  dialog.append(content)
+  return backdrop
+}
+
+module.exports.view = view

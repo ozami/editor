@@ -35,7 +35,7 @@ if ($encoding === false) {
 $r = mb_convert_encoding($r, "utf-8", $encoding);
 
 echo json_encode(array(
-  "encoding" => $encoding,
+  "encoding" => strtoupper($encoding),
   "content" => $r
 ));
 die();

@@ -11,6 +11,29 @@ body {
   position: relative;
 }
 
+option {
+  padding-bottom: 5px;
+  padding-top: 5px;
+}
+
+button {
+  font-family: inherit;
+}
+
+button.link {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  margin: 0;
+  outline: none;
+  padding: 0;
+  user-select: none;
+  -webkit-appearance: none;
+}
+button.link:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
 #finder {
   background: #eeeeee;
   position: absolute;
@@ -250,62 +273,64 @@ main {
 .editor-foot > button {
   height: 25px;
   line-height: 25px;
+  min-width: 60px;
+  padding: 0 2px;
 }
 .editor-message {
   float: left;
 }
 .editor-mode {
   float: right;
-  padding: 0 0.5rem;
   user-select: none;
   cursor: pointer;
 }
 .editor-indent.link {
   float: right;
   letter-spacing: 2px;
-  padding: 0 0.5rem;
 }
-.editor-eol {
+.editor-eol.link {
   float: right;
   letter-spacing: 2px;
-  padding: 0 0.5rem;
 }
-.editor-encoding {
+.editor-encoding.link {
   float: right;
-  padding: 0 0.5rem;
-}
-
-button.link {
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-  margin: 0;
-  outline: none;
-  padding: 0;
-  user-select: none;
-  -webkit-appearance: none;
-}
-button.link:hover {
-  background: rgba(0, 0, 0, 0.1);
+  letter-spacing: 2px;
 }
 
 .backdrop {
+  align-items: center;
   background: rgba(0, 0, 0, 0.6);
   bottom: 0;
+  display: none;
   left: 0;
+  justify-content: center;
   position: absolute;
   right: 0;
   top: 0;
   z-index: 100;
 }
+.backdrop.visible {
+  display: flex;
+}
 
 .dialog {
   background: white;
-  bottom: 0;
-  left: 0;
   margin: auto;
   padding: 20px;
-  position: absolute;
-  right: 0;
-  top: 0;
+}
+
+.dialog button {
+  margin-right: 5px;
+  min-width: 60px;
+}
+
+.select-encoding-dialog {
+  max-height: 250px;
+  max-width: 250px;
+  min-width: 150px;
+}
+.select-encoding-dialog select {
+  display: block;
+  width: 100%;
+  letter-spacing: 2px;
 }

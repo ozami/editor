@@ -1,5 +1,6 @@
 var $ = require("jquery")
 var CodeMirror = require("./codemirror")
+var SelectEncodingDialogView = require("./select-encoding-dialog-view")
 
 var EditorView = function($root, editor, editor_mgr) {
   var file = editor.getFile()
@@ -15,9 +16,13 @@ var EditorView = function($root, editor, editor_mgr) {
       $('<div class="editor-message">'),
       $('<button class="editor-indent link" type="button">'),
       $('<button class="editor-eol link" type="button">'),
-      $('<div class="editor-encoding">'),
+      $('<button class="editor-encoding link" type="button">'),
       $('<div class="editor-mode">')
     )
+  )
+  
+  SelectEncodingDialogView(
+    editor.select_encoding_dialog
   )
   
   // save
@@ -88,6 +93,14 @@ var EditorView = function($root, editor, editor_mgr) {
   }
   file.encoding.add(updateEncoding)
   updateEncoding(file.encoding.get())
+  $root.find(".editor-encoding").click(function() {
+    editor.select_encoding_dialog.show(
+      file.encoding.get()
+    )
+  })
+  editor.select_encoding_dialog.confirmed.add(function(encoding) {
+    file.encoding.set(encoding)
+  })
   
   // message
   editor.message.observe(function(message) {
