@@ -6,7 +6,7 @@ CodeMirror.defineInitHook(function(cm) {
 
 CodeMirror.commands.mark = function(cm) {
   var cursor = cm.getCursor()
-  if (marks.length) {
+  if (cm.marks.length) {
     var last = cm.marks[cm.marks.length - 1]
     if (last.line == cursor.line && last.ch == cursor.ch) {
       cm.setSelections(cm.marks.map(function(m) {
