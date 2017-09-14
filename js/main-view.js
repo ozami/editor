@@ -9,7 +9,7 @@ var MainView = function(editor_mgr, finder) {
     editor_mgr
   )
   FinderView(
-    $('<form id="finder">').appendTo($main),
+    $('<div>').appendTo($main),
     finder
   )
   

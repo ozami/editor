@@ -7,7 +7,7 @@ var Finder = function() {
     path_changed: new Signal(),
     visibility_changed: new Signal(),
     
-    path: "",
+    path: "/",
     visible: false,
     
     select: function(path) {
