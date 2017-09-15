@@ -22,6 +22,7 @@ var EditorView = function($root, editor, editor_mgr) {
   )
   
   SelectEncodingDialogView(
+    $('<div>').appendTo($root),
     editor.select_encoding_dialog
   )
   
