@@ -1,5 +1,4 @@
 var _ = require("underscore")
-var $ = require("jquery")
 var Signal = require("signals").Signal
 
 var FinderSuggest = function(finder) {
@@ -12,20 +11,18 @@ var FinderSuggest = function(finder) {
     selected: new Signal(),
     
     update: function(path) {
-      $.ajax({
-        method: "post",
-        url: "/finder.php",
-        timeout: 3000,
-        data: {
-          path: path,
-        },
-        dataType: "json",
-      }).fail(function() {
+      const body = new FormData()
+      body.set("path", path)
+      fetch("/finder.php", {
+        method: "POST",
+        body,
+      })
+      .then(response => response.json())
+      .then(response => {
+        model.setItems(response.items.map(i => response.base + i))
+      })
+      .catch(() => {
         console.log("failed to fetch suggest for the path: " + path)
-      }).done(function(reply) {
-        model.setItems(reply.items.map(function(i) {
-          return reply.base + i
-        }))
       })
     },
     
