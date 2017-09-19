@@ -1,5 +1,4 @@
 const React = require("react")
-const $ = require("jquery")
 const FinderSuggestItem = require("./finder-suggest-item.jsx")
 
 class FinderSuggest extends React.Component {
@@ -25,22 +24,23 @@ class FinderSuggest extends React.Component {
   componentDidUpdate() {
     if (this.props.suggest.cursor) {
       this.scrollIntoView(
-        this.$list,
-        this.$list.find(".selected")
+        this.list,
+        this.list.getElementsByClassName("selected")[0]
       )
     }
   }
   
-  scrollIntoView($parent, $target) {
-    var height = $target.height()
-    var top = $target.prevAll().length * height
-    var bottom = top + height
-    var view_height = $parent.innerHeight()
-    if (top - $parent.scrollTop() < 0) {
-      $parent.scrollTop(top)
+  scrollIntoView(parent, target) {
+    let top = 0
+    for (let node = target.previousSibling; node; node = node.previousSibling) {
+      top += node.offsetHeight
     }
-    if (bottom - $parent.scrollTop() > view_height) {
-      $parent.scrollTop(bottom - view_height)
+    if (top < parent.scrollTop) {
+      parent.scrollTop = top
+    }
+    const bottom = top + target.offsetHeight - parent.clientHeight
+    if (bottom > parent.scrollTop) {
+      parent.scrollTop = bottom
     }
   }
   
@@ -50,10 +50,10 @@ class FinderSuggest extends React.Component {
     return (
       <div
         id="finder-items"
-        ref={(list) => self.$list = $(list)}
+        ref={(list) => self.list = list}
         className={suggest.items.length ? "active" : ""}>
         {suggest.items.map((path) => (
-            <FinderSuggestItem
+          <FinderSuggestItem
             key={path}
             path={path}
             active={suggest.cursor === path}
