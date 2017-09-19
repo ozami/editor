@@ -42,8 +42,7 @@ class Finder extends React.Component {
     const input = this.input
     if (input) {
       input.focus()
-      const len = input.value.length
-      input.setSelectionRange(len, len)
+      input.setSelectionRange(9999, 9999)
     }
   }
   
