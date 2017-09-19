@@ -47,12 +47,14 @@ class FinderSuggest extends React.Component {
   render() {
     const suggest = this.props.suggest
     const self = this
+    if (suggest.items.length == 0) {
+      return null
+    }
     return (
       <div
         id="finder-items"
-        ref={(list) => self.list = list}
-        className={suggest.items.length ? "active" : ""}>
-        {suggest.items.map((path) => (
+        ref={list => self.list = list}>
+        {suggest.items.map(path => (
           <FinderSuggestItem
             key={path}
             path={path}

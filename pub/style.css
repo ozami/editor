@@ -60,7 +60,6 @@ button.link:hover {
 
 #finder-items {
   z-index: 100;
-  visibility: hidden;
   font-size: 0.875rem;
   position: absolute;
   background: #fff;
@@ -72,9 +71,6 @@ button.link:hover {
   max-height: 25rem;
   overflow-y: auto;
   overflow-x: hidden;
-}
-#finder-items.active {
-  visibility: visible;
 }
 #finder-items a {
   display: block;
