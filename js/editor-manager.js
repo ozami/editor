@@ -51,7 +51,9 @@ var EditorManager = function(finder) {
       }
       model.active = path
       model.activated.dispatch(path)
-      finder.setPath(path)
+      if (path) {
+        finder.setPath(path)
+      }
       return true
     },
     
