@@ -27,10 +27,14 @@ var EditorManager = function(finder) {
         return
       }
       var editor = Editor(File(path))
-      editor.load().then(function() {
+      editor.load()
+      .then(function() {
         model.editors.push(editor)
         model.opened.dispatch(editor)
         model.activate(path)
+      })
+      .catch(error => {
+        alert("Failed to load " + path + ". " + error)
       })
     },
     

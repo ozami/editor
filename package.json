@@ -5,7 +5,6 @@
   "main": "index.js",
   "dependencies": {
     "codemirror": "^5.27.4",
-    "jquery": "^3.2.1",
     "mousetrap": "^1.6.1",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",

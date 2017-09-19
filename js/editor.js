@@ -22,7 +22,8 @@ var Editor = function(file) {
     },
     
     load: function(text) {
-      return file.read().then(function(text) {
+      return file.read()
+      .then(function(text) {
         editor.indent.set(Indent.detectIndentType(text))
         editor.text.set(text)
         editor.message.set("Loaded.")
@@ -30,12 +31,14 @@ var Editor = function(file) {
     },
     
     save: function() {
-      return file.write(editor.text.get()).catch(function(error) {
-        editor.message.set("Save failed. " + reply.error)
-        editor.status.set("error")
-      }).then(function() {
+      return file.write(editor.text.get())
+      .then(() => {
         editor.status.set("clean")
         editor.message.set("Saved.")
+      })
+      .catch(error => {
+        editor.message.set("Failed to save. " + error)
+        editor.status.set("error")
       })
     },
   }

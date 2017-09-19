@@ -1,4 +1,3 @@
-var $ = require("jquery")
 var Observable = require("./observable")
 var Eol = require("./eol")
 
@@ -12,46 +11,39 @@ var File = function(path) {
     },
     
     read: function() {
-      return new Promise(function(resolve, reject) {
-        $.ajax({
-          method: "post",
-          url: "/read.php",
-          timeout: 3000,
-          data: {
-            path: path,
-          },
-          dataType: "json",
-        }).fail(reject).done(function(reply) {
-          file.encoding.set(reply.encoding)
-          file.eol.set(Eol.detect(reply.content))
-          var content = Eol.regulate(reply.content)
-          resolve(content)
-        })
+      const body = new FormData()
+      body.set("path", path)
+      
+      return fetch("/read.php", {
+        method: "POST",
+        body,
+      })
+      .then(response => response.json())
+      .then(response => {
+        if (response.error) {
+          return Promise.reject(response.error)
+        }
+        file.encoding.set(response.encoding)
+        file.eol.set(Eol.detect(response.content))
+        return Eol.regulate(response.content)
       })
     },
     
     write: function(text) {
-      return new Promise(function(resolve, reject) {
-        $.ajax({
-          url: "/write.php",
-          method: "post",
-          timeout: 2000,
-          data: {
-            path: path,
-            encoding: file.encoding.get(),
-            content: text.replace(/\n/g, file.eol.get())
-          },
-          dataType: "json",
-        }).done(function(reply) {
-          if (reply == "ok") {
-            resolve()
-          }
-          else {
-            reject(reply.error)
-          }
-        }).fail(function() {
-          reject("")
-        })
+      const body = new FormData()
+      body.set("path", path)
+      body.set("encoding", file.encoding.get())
+      body.set("content", text.replace(/\n/g, file.eol.get()))
+      
+      return fetch("/write.php", {
+        method: "post",
+        body,
+      })
+      .then(response => response.json())
+      .then(response => {
+        if (response != "ok") {
+          return Promise.reject(response.error)
+        }
       })
     },
   }

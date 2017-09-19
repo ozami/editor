@@ -23,7 +23,7 @@ if (!is_dir($dir)) {
   }
 }
 
-if (file_put_contents($path, $content) === false) {
+if (@file_put_contents($path, $content) === false) {
   echo json_encode(array(
     "error" => "write"
   ));
