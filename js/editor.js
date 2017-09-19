@@ -1,4 +1,4 @@
-var _ = require("underscore")
+var debounce = require("lodash.debounce")
 var Observable = require("./observable")
 var CodeMirror = require("./codemirror")
 var Indent = require("./indent")
@@ -61,7 +61,7 @@ var Editor = function(file) {
   editor.mode.set(detectMode(file.getPath()))
   
   // auto save
-  editor.text.observe(_.debounce(function() {
+  editor.text.observe(debounce(function() {
     if (editor.status.get() != "clean") {
       editor.save()
     }

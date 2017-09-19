@@ -1,5 +1,5 @@
 const fs = require("fs")
-const _ = require("underscore")
+const keys = require("lodash.keys")
 const browserify = require("browserify")
 const envify = require("envify/custom")
 const uglify = require("uglify-js")
@@ -10,7 +10,7 @@ const error = function(message) {
     process.exit(1)
 }
 
-const vendors = _.keys(
+const vendors = keys(
     require("./package.json").dependencies
 )
 

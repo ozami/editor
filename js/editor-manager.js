@@ -1,5 +1,4 @@
 var signals = require("signals")
-var _ = require("underscore")
 var File = require("./file")
 var Editor = require("./editor")
 

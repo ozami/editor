@@ -1,4 +1,4 @@
-var _ = require("underscore")
+var debounce = require("lodash.debounce")
 var Signal = require("signals").Signal
 
 var FinderSuggest = function(finder) {
@@ -73,7 +73,7 @@ var FinderSuggest = function(finder) {
     }
   })
   
-  finder.path_changed.add(_.debounce(model.update, 250))
+  finder.path_changed.add(debounce(model.update, 250))
   
   return model
 }

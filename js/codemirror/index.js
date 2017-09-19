@@ -1,5 +1,5 @@
 var CodeMirror = require("codemirror")
-var _ = require("underscore")
+var foreach = require("lodash.foreach")
 require("codemirror-addon")
 require("./mark")
 require("./select-line")
@@ -46,7 +46,7 @@ CodeMirror.defineInitHook(function(cm) {
     "mod+l": "selectLine",
     "mod+shift+l": "splitIntoLines",
   }
-  _.each(keymap, function(command, key) {
+  foreach(keymap, function(command, key) {
     Mousetrap(input).bind(key, function() {
       cm.execCommand(command)
       return false
