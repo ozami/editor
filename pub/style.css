@@ -56,7 +56,6 @@ button.link:hover {
 }
 
 #finder-items {
-  z-index: 100;
   font-size: 0.875rem;
   position: absolute;
   background: #fff;
