@@ -14,19 +14,28 @@ const vendors = _.keys(
     require("./package.json").dependencies
 )
 
-browserify()
-.transform(envify({_: "purge", NODE_ENV: "production"}), {global: true})
-.transform(uglifyify, {global: true})
-.require(vendors)
-.require("./js/codemirror-addon", {expose: "codemirror-addon"})
-.bundle(function(err, code) {
+const release = process.argv.indexOf("--release") != -1
+
+const b = browserify({debug: !release})
+if (release) {
+    b.transform(envify({_: "purge", NODE_ENV: "production"}), {global: true})
+    b.transform(uglifyify, {global: true})
+}
+b.require(vendors)
+b.require("./js/codemirror-addon", {expose: "codemirror-addon"})
+b.bundle(function(err, code) {
     if (err) {
         error(err)
     }
-    const minified = uglify.minify(code.toString())
-    //const minified = {code: code}
-    if (minified.error) {
-        error(minified.error)
+    if (release) {
+        const minified = uglify.minify(code.toString())
+        if (minified.error) {
+            error(minified.error)
+        }
+        code = minified.code
     }
-    fs.writeFileSync("pub/vendor.js", minified.code)
+    else {
+        code = code.toString()
+    }
+    fs.writeFileSync("pub/vendor" + (release ? "-min" : "") + ".js", code)
 })

@@ -11,7 +11,7 @@ if (minified.error) {
     error(minified.error)
 }
 
-fs.createReadStream("pub/vendor.js")
+fs.createReadStream("pub/vendor-min.js")
 .pipe(fs.createWriteStream("pub/index.js"))
 .on("finish", function() {
     fs.appendFileSync("pub/index.js", minified.code)
