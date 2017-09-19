@@ -11,7 +11,7 @@ var File = function(path) {
     },
     
     read: function() {
-      const body = new FormData()
+      const body = new URLSearchParams()
       body.set("path", path)
       
       return fetch("/read.php", {
@@ -30,7 +30,7 @@ var File = function(path) {
     },
     
     write: function(text) {
-      const body = new FormData()
+      const body = new URLSearchParams()
       body.set("path", path)
       body.set("encoding", file.encoding.get())
       body.set("content", text.replace(/\n/g, file.eol.get()))

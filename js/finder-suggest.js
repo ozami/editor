@@ -11,7 +11,7 @@ var FinderSuggest = function(finder) {
     selected: new Signal(),
     
     update: function(path) {
-      const body = new FormData()
+      const body = new URLSearchParams()
       body.set("path", path)
       fetch("/finder.php", {
         method: "POST",
