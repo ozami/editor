@@ -1,4 +1,3 @@
-var $ = require("jquery")
 var _ = require("underscore")
 var Observable = require("./observable")
 var CodeMirror = require("./codemirror")

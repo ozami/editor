@@ -20,10 +20,12 @@ class SelectEncodingDialog extends React.Component {
           autoFocus
           value={model.encoding.get()}
           onChange={this.handleEncodingChange}>
-          {model.options.map(encoding => <option>{encoding}</option>)}
+          {model.options.map(encoding => 
+            <option key={encoding}>{encoding}</option>
+          )}
         </select>
-        <button class="ok" onClick={model.confirm}>OK</button>
-        <button class="cancel" onClick={model.hide}>Cancel</button>
+        <button className="ok" onClick={model.confirm}>OK</button>
+        <button className="cancel" onClick={model.hide}>Cancel</button>
       </div>
     )
   }

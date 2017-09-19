@@ -6,16 +6,14 @@ const FileTabList = (props) => {
   const onClick = (path) => {
     mgr.activate(path)
   }
-  const items = mgr.editors.map((editor) => {
-    return (
-      <FileTab
-        key={editor.getPath()}
-        editor={editor}
-        active={mgr.active == editor.getPath()}
-        onClick={onClick}
-        />
-    )
-  })
+  const items = mgr.editors.map((editor) => (
+    <FileTab
+      key={editor.getPath()}
+      editor={editor}
+      active={mgr.active == editor.getPath()}
+      onClick={onClick}
+      />
+  ))
   return (
     <div id="files">{items}</div>
   )
