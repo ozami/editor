@@ -16,13 +16,8 @@ class Finder extends React.Component {
   componentDidMount() {
     const finder = this.props.finder
     const input = this.input
-    finder.visibility_changed.add(this.handleChange)
     finder.path_changed.add(this.handleChange)
-    finder.visibility_changed.add((visibility) => {
-      if (input) {
-        input.focus()
-      }
-    })
+    finder.visibility_changed.add(this.handleChange)
 
     Mousetrap(input).bind("enter", False(finder.enter))
     Mousetrap(input).bind("tab", False(finder.tab))
@@ -43,6 +38,15 @@ class Finder extends React.Component {
     this.props.finder.path_changed.remove(this.handleChange)
   }
   
+  componentDidUpdate() {
+    const input = this.input
+    if (input) {
+      input.focus()
+      const len = input.value.length
+      input.setSelectionRange(len, len)
+    }
+  }
+  
   render() {
     const self = this
     const finder = this.props.finder
@@ -50,11 +54,13 @@ class Finder extends React.Component {
     const onChange = (e) => {
       finder.setPath(e.target.value)
     }
-    
+    if (!finder.visible) {
+      return null
+    }
     return (
-      <form id="finder" className={finder.visible ? "active" : ""}>
+      <form id="finder">
         <input
-          ref={(input) => self.input = input}
+          ref={input => self.input = input}
           type="text"
           id="finder-path"
           className="mousetrap"

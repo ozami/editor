@@ -41,13 +41,10 @@ button.link:hover {
   right: 0;
   top: 0;
   height: auto;
-  display: none;
+  display: block;
   padding: 0.25rem;
   z-index: 100;
   border-bottom: 1px solid #ccc;
-}
-#finder.active {
-  display: block;
 }
 #finder-path {
   box-sizing: border-box;
