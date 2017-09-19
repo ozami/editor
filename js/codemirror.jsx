@@ -2,8 +2,16 @@ const React = require("react")
 const CM = require("./codemirror")
 
 class CodeMirror extends React.Component {
-  constructor(props) {
-    super(props)
+  handleIndentChange() {
+    const type = this.props.editor.indent.get()
+    if (type == "TAB") {
+      this.cm.setOption("indentWithTabs", true)
+      this.cm.setOption("indentUnit", 4)
+    }
+    else {
+      this.cm.setOption("indentWithTabs", false)
+      this.cm.setOption("indentUnit", Number(type.replace("SP", "")))
+    }
   }
   
   componentDidMount() {
@@ -38,20 +46,11 @@ class CodeMirror extends React.Component {
     // mode
     editor.mode.observe(mode => {
       cm.setOption("mode", mode)
-      CM.registerHelper("hintWords", mode, null)
     })
     
     // indent
-    editor.indent.observe(type => {
-      if (type == "TAB") {
-        cm.setOption("indentWithTabs", true)
-        cm.setOption("indentUnit", 4)
-      }
-      else {
-        cm.setOption("indentWithTabs", false)
-        cm.setOption("indentUnit", Number(type.replace("SP", "")))
-      }
-    })
+    editor.indent.observe(() => this.handleIndentChange())
+    this.handleIndentChange()
     
     // save with command-s
     Mousetrap(this.el).bind("mod+s", () => {
