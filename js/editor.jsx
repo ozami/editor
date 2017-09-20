@@ -2,6 +2,7 @@ const React = require("react")
 const Portal = require("react-portal-minimal")
 const CodeMirror = require("./codemirror.jsx")
 const SelectEncodingDialog = require("./select-encoding-dialog.jsx")
+const SelectModeDialog = require("./select-mode-dialog.jsx")
 
 class Editor extends React.Component {
   constructor(props) {
@@ -21,6 +22,9 @@ class Editor extends React.Component {
     editor.message.observe(this.handleChange)
     // mode
     editor.mode.observe(this.handleChange)
+    editor.select_mode_dialog.confirmed.add(editor.mode.set)
+    editor.select_mode_dialog.visible.observe(this.handleChange)
+    editor.select_mode_dialog.mode.observe(this.handleChange)
     // indent
     editor.indent.observe(this.handleChange)
     // line seprator
@@ -53,17 +57,23 @@ class Editor extends React.Component {
             {eol_names[file.eol.get()]}
           </button>
           <button className="editor-encoding link" type="button"
-             onClick={() => model.select_encoding_dialog.show(file.encoding.get())}>
+            onClick={() => model.select_encoding_dialog.show(file.encoding.get())}>
             {file.encoding.get()}
           </button>
-          <div className="editor-mode">
+          <button className="editor-mode link" type="button"
+            onClick={() => model.select_mode_dialog.show(model.mode.get())}>
             {model.mode.get()}
-          </div>
+          </button>
         </div>
         <Portal>
           <SelectEncodingDialog
             model={model.select_encoding_dialog}
             isOpen={model.select_encoding_dialog.visible.get()} />
+        </Portal>
+        <Portal>
+          <SelectModeDialog
+            model={model.select_mode_dialog}
+            isOpen={model.select_mode_dialog.visible.get()} />
         </Portal>
       </div>
     )

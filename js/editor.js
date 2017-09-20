@@ -3,6 +3,7 @@ var Observable = require("./observable")
 var CodeMirror = require("./codemirror")
 var Indent = require("./indent")
 var SelectEncodingDialog = require("./select-encoding-dialog")
+const SelectModeDialog = require("./select-mode-dialog")
 
 var Editor = function(file) {
   var editor = {
@@ -12,6 +13,7 @@ var Editor = function(file) {
     indent: Indent(),
     message: Observable(""),
     select_encoding_dialog: SelectEncodingDialog(),
+    select_mode_dialog: SelectModeDialog(),
     
     getFile: function() {
       return file
