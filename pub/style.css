@@ -323,3 +323,14 @@ main {
   width: 100%;
   letter-spacing: 2px;
 }
+
+.select-mode-dialog {
+  max-height: 400px;
+  max-width: 250px;
+  min-width: 150px;
+}
+.select-mode-dialog select {
+  display: block;
+  width: 100%;
+  letter-spacing: 1px;
+}
