@@ -10,7 +10,12 @@ html, body {
 body {
   position: relative;
 }
-
+input {
+  outline: none;
+}
+select {
+  outline: none;
+}
 option {
   padding-bottom: 5px;
   padding-top: 5px;
@@ -19,6 +24,7 @@ option {
 button {
   font-family: inherit;
   font-size: inherit;
+  outline: none;
 }
 
 button.link {
@@ -26,7 +32,6 @@ button.link {
   background: transparent;
   cursor: pointer;
   margin: 0;
-  outline: none;
   padding: 0;
   user-select: none;
   -webkit-appearance: none;
