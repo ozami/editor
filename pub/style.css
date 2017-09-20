@@ -18,6 +18,7 @@ option {
 
 button {
   font-family: inherit;
+  font-size: inherit;
 }
 
 button.link {
@@ -265,16 +266,15 @@ main {
 .editor-foot > button {
   height: 25px;
   line-height: 25px;
-  min-width: 60px;
-  padding: 0 2px;
+  min-width: 45px;
+  padding: 0 5px;
 }
 .editor-message {
   float: left;
 }
 .editor-mode {
   float: right;
-  user-select: none;
-  cursor: pointer;
+  letter-spacing: 2px;
 }
 .editor-indent.link {
   float: right;
@@ -320,8 +320,10 @@ main {
 }
 .select-encoding-dialog select {
   display: block;
-  width: 100%;
+  font-size: inherit;
   letter-spacing: 2px;
+  margin-bottom: 10px;
+  width: 100%;
 }
 
 .select-mode-dialog {
@@ -331,6 +333,8 @@ main {
 }
 .select-mode-dialog select {
   display: block;
-  width: 100%;
+  font-size: inherit;
   letter-spacing: 1px;
+  margin-bottom: 10px;
+  width: 100%;
 }

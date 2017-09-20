@@ -62,7 +62,7 @@ class Editor extends React.Component {
           </button>
           <button className="editor-mode link" type="button"
             onClick={() => model.select_mode_dialog.show(model.mode.get())}>
-            {model.mode.get()}
+            {model.mode.get().toUpperCase()}
           </button>
         </div>
         <Portal>
