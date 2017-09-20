@@ -1,5 +1,4 @@
 var signals = require("signals")
-var _ = require("underscore")
 var File = require("./file")
 var Editor = require("./editor")
 
@@ -27,10 +26,14 @@ var EditorManager = function(finder) {
         return
       }
       var editor = Editor(File(path))
-      editor.load().then(function() {
+      editor.load()
+      .then(function() {
         model.editors.push(editor)
         model.opened.dispatch(editor)
         model.activate(path)
+      })
+      .catch(error => {
+        alert("Failed to load " + path + ". " + error)
       })
     },
     
@@ -47,7 +50,9 @@ var EditorManager = function(finder) {
       }
       model.active = path
       model.activated.dispatch(path)
-      finder.setPath(path)
+      if (path) {
+        finder.setPath(path)
+      }
       return true
     },
     

@@ -1,42 +1,25 @@
-var $ = require("jquery")
-var Dialog = require("./dialog")
+const React = require("react")
+const ReactDOM = require("react-dom")
+const Portal = require("react-portal-minimal")
+const SelectEncodingDialog = require("./select-encoding-dialog.jsx")
 
-var SelectEncodingDialogView = function(model) {
-  var $content = $('<div>').append(
-    $('<select size="4">'),
-    $('<button class="ok">OK</button>'),
-    $('<button class="cancel">Cancel</button>')
-  )
-  
-  var $dialog = Dialog.view($content, "select-encoding-dialog")
-
-  var $select = $content.find("select")
-  $select.append(model.options.map(function(encoding) {
-    return $('<option>').text(encoding)
-  }))
-  model.encoding.observe(function(encoding) {
-    $select.val(encoding)
-  })
-  $select.val(model.encoding.get())
-  $select.click(function() {
-    model.encoding.set($select.val())
-  })
-  
-  // ok
-  $content.find("button.ok").click(model.confirm)
-  
-  // cancel
-  $content.find("button.cancel").click(model.hide)
-  
+var SelectEncodingDialogView = function($root, model) {
+  let isOpen = false
+  const render = () => {
+    ReactDOM.render(
+      <Portal>
+        <SelectEncodingDialog
+          model={model}
+          isOpen={isOpen} />
+      </Portal>,
+      $root[0]
+    )
+  }
   model.visible.observe(function(visible) {
-    if (visible) {
-      $dialog.addClass("visible")
-      $content.find("input, select").focus()
-    }
-    else {
-      $dialog.removeClass("visible")
-    }
+    isOpen = visible
+    render()
   })
+  model.encoding.observe(render)
 }
 
 module.exports = SelectEncodingDialogView

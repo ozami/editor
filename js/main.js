@@ -1,7 +1,7 @@
 var Mousetrap = require("mousetrap")
 var EditorManager = require("./editor-manager")
 var Finder = require("./finder")
-var MainView = require("./main-view")
+var MainView = require("./main.jsx")
 
 module.exports.run = function() {
   var finder = Finder()

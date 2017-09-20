@@ -41,13 +41,10 @@ button.link:hover {
   right: 0;
   top: 0;
   height: auto;
-  display: none;
+  display: block;
   padding: 0.25rem;
   z-index: 100;
   border-bottom: 1px solid #ccc;
-}
-#finder.active {
-  display: block;
 }
 #finder-path {
   box-sizing: border-box;
@@ -59,8 +56,6 @@ button.link:hover {
 }
 
 #finder-items {
-  z-index: 100;
-  visibility: hidden;
   font-size: 0.875rem;
   position: absolute;
   background: #fff;
@@ -72,9 +67,6 @@ button.link:hover {
   max-height: 25rem;
   overflow-y: auto;
   overflow-x: hidden;
-}
-#finder-items.active {
-  visibility: visible;
 }
 #finder-items a {
   display: block;
@@ -297,20 +289,17 @@ main {
   letter-spacing: 2px;
 }
 
-.backdrop {
+.dialog-backdrop {
   align-items: center;
   background: rgba(0, 0, 0, 0.6);
   bottom: 0;
-  display: none;
+  display: flex;
   left: 0;
   justify-content: center;
   position: absolute;
   right: 0;
   top: 0;
   z-index: 100;
-}
-.backdrop.visible {
-  display: flex;
 }
 
 .dialog {

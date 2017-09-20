@@ -1,25 +1,41 @@
-"use strict"
+const fs = require("fs")
+const keys = require("lodash.keys")
+const browserify = require("browserify")
+const envify = require("envify/custom")
+const uglify = require("uglify-js")
+const uglifyify = require("uglifyify")
 
 const error = function(message) {
     console.log(message)
     process.exit(1)
 }
 
-const vendors = require("underscore").keys(
+const vendors = keys(
     require("./package.json").dependencies
 )
 
-require("browserify")()
-.require(vendors)
-.require("./js/codemirror-addon", {expose: "codemirror-addon"})
-.bundle(function(err, code) {
+const release = process.argv.indexOf("--release") != -1
+
+const b = browserify({debug: !release})
+if (release) {
+    b.transform(envify({_: "purge", NODE_ENV: "production"}), {global: true})
+    b.transform(uglifyify, {global: true})
+}
+b.require(vendors)
+b.require("./js/codemirror-addon", {expose: "codemirror-addon"})
+b.bundle(function(err, code) {
     if (err) {
         error(err)
     }
-    const minified = require("uglify-js").minify(code.toString())
-    //const minified = {code: code}
-    if (minified.error) {
-        error(minified.error)
+    if (release) {
+        const minified = uglify.minify(code.toString())
+        if (minified.error) {
+            error(minified.error)
+        }
+        code = minified.code
     }
-    require("fs").writeFileSync("pub/vendor.js", minified.code)
+    else {
+        code = code.toString()
+    }
+    fs.writeFileSync("pub/vendor" + (release ? "-min" : "") + ".js", code)
 })

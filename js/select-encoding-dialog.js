@@ -1,9 +1,7 @@
-var $ = require("jquery")
 var Signal = require("signals").Signal
 var Observable = require("./observable")
 
 var SelectEncodingDialog = function() {
-  
   var dialog = {
     visible: Observable(false),
     encoding: Observable(),
