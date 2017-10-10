@@ -18,17 +18,17 @@ class Finder extends React.Component {
     const input = this.input
     finder.path_changed.add(this.handleChange)
     finder.visibility_changed.add(this.handleChange)
-
-    Mousetrap(input).bind("enter", False(finder.enter))
-    Mousetrap(input).bind("tab", False(finder.tab))
-    Mousetrap(input).bind("esc", False(finder.hide))
-    Mousetrap(input).bind("down", False(function() {
+    const bindings = this.bindings = new Mousetrap(input)
+    bindings.bind("enter", False(finder.enter))
+    bindings.bind("tab", False(finder.tab))
+    bindings.bind("esc", False(finder.hide))
+    bindings.bind("down", False(function() {
       finder.suggest.moveCursor(true)
     }))
-    Mousetrap(input).bind("up", False(function() {
+    bindings.bind("up", False(function() {
       finder.suggest.moveCursor(false)
     }))
-    Mousetrap(input).bind("mod+u", False(
+    bindings.bind("mod+u", False(
       finder.goToParentDirectory
     ))
   }
@@ -40,7 +40,7 @@ class Finder extends React.Component {
   
   componentDidUpdate() {
     const input = this.input
-    if (input && document.activeElement != input) {
+    if (this.props.finder.visible && document.activeElement != input) {
       input.focus()
       input.setSelectionRange(9999, 9999)
     }
@@ -53,11 +53,11 @@ class Finder extends React.Component {
     const onChange = (e) => {
       finder.setPath(e.target.value)
     }
-    if (!finder.visible) {
-      return null
+    const formStyles = {
+      display: finder.visible ? "" : "none",
     }
     return (
-      <form id="finder">
+      <form id="finder" style={formStyles}>
         <input
           ref={input => self.input = input}
           type="text"
