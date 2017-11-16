@@ -18,6 +18,8 @@ Object.assign(CodeMirror.defaults, {
   styleActiveLine: {nonEmpty: true},
   styleSelectedText: true,
   dragDrop: false,
+  // Use solely anyword-hint
+  hintOptions: {hint: CodeMirror.hint.anyword},
   extraKeys: {
     "Ctrl-Space": "autocomplete",
     "Ctrl-U": "autocomplete",
