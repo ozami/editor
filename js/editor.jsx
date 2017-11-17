@@ -1,5 +1,4 @@
 const React = require("react")
-const Portal = require("react-portal-minimal")
 const CodeMirror = require("./codemirror.jsx")
 const SelectEncodingDialog = require("./select-encoding-dialog.jsx")
 const SelectModeDialog = require("./select-mode-dialog.jsx")
@@ -65,16 +64,12 @@ class Editor extends React.Component {
             {model.mode.get().toUpperCase()}
           </button>
         </div>
-        <Portal>
-          <SelectEncodingDialog
-            model={model.select_encoding_dialog}
-            isOpen={model.select_encoding_dialog.visible.get()} />
-        </Portal>
-        <Portal>
-          <SelectModeDialog
-            model={model.select_mode_dialog}
-            isOpen={model.select_mode_dialog.visible.get()} />
-        </Portal>
+        <SelectEncodingDialog
+          model={model.select_encoding_dialog}
+          isOpen={model.select_encoding_dialog.visible.get()} />
+        <SelectModeDialog
+          model={model.select_mode_dialog}
+          isOpen={model.select_mode_dialog.visible.get()} />
       </div>
     )
   }

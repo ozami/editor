@@ -8,9 +8,8 @@
     "lodash.debounce": "^4.0.8",
     "lodash.foreach": "^4.5.0",
     "mousetrap": "^1.6.1",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
-    "react-portal-minimal": "^4.0.2",
+    "react": "^16.1.1",
+    "react-dom": "^16.1.1",
     "signals": "^1.0.0"
   },
   "devDependencies": {
