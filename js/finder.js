@@ -9,6 +9,7 @@ var Finder = function() {
     
     path: "/",
     visible: false,
+    tab_pending: false,
     
     select: function(path) {
       model.setPath(path)
@@ -35,6 +36,7 @@ var Finder = function() {
     },
     
     setPath: function(path) {
+      model.tab_pending = false
       model.path = path
       model.path_changed.dispatch(path)
     },
@@ -62,12 +64,20 @@ var Finder = function() {
         return
       }
       suggest.update(model.path)
+      model.tab_pending = true
     },
   }
   
   var suggest = model.suggest = FinderSuggest(model)
   suggest.selected.add(function(path) {
     model.select(path)
+  })
+  
+  suggest.items_changed.add(function() {
+    if (model.tab_pending) {
+      model.tab_pending = false
+      model.tab()
+    }
   })
   
   return model

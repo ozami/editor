@@ -28,6 +28,9 @@ var FinderSuggest = function(finder) {
     
     setItems: function(items) {
       model.setCursor(null)
+      if (items.join("\n") == model.items.join("\n")) {
+        return
+      }
       model.items = items
       model.items_changed.dispatch(model.items)
     },
