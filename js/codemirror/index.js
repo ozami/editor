@@ -2,6 +2,7 @@ var CodeMirror = require("codemirror")
 var foreach = require("lodash.foreach")
 require("codemirror-addon")
 require("./mark")
+require("./join-lines")
 require("./select-line")
 require("./select-word")
 require("./split-into-lines")
@@ -23,6 +24,7 @@ Object.assign(CodeMirror.defaults, {
   extraKeys: {
     "Ctrl-Space": "autocomplete",
     "Ctrl-U": "autocomplete",
+    "Ctrl-J": "joinLines",
     "Ctrl-/": "toggleComment",
     "Cmd-/": "toggleComment",
     "Tab": "indentAuto",
