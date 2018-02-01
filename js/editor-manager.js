@@ -28,7 +28,8 @@ var EditorManager = function(finder) {
       var editor = Editor(File(path))
       editor.load()
       .then(function() {
-        model.editors.push(editor)
+        var position = model.indexOf(model.active)
+        model.editors.splice(position + 1, 0, editor)
         model.opened.dispatch(editor)
         model.activate(path)
       })
