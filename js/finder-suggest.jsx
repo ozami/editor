@@ -54,11 +54,12 @@ class FinderSuggest extends React.Component {
       <div
         id="finder-items"
         ref={list => self.list = list}>
-        {suggest.items.map(path => (
+        {suggest.items.map(item => (
           <FinderSuggestItem
-            key={path}
-            path={path}
-            active={suggest.cursor === path}
+            key={item}
+            base={suggest.base}
+            item={item}
+            active={suggest.cursor == suggest.base + item}
             onSelect={suggest.select} />
         ))}
       </div>

@@ -3,6 +3,7 @@ var Signal = require("signals").Signal
 
 var FinderSuggest = function(finder) {
   var model = {
+    base: null,
     items: [],
     cursor: null, // highlighted item
     
@@ -19,20 +20,25 @@ var FinderSuggest = function(finder) {
       })
       .then(response => response.json())
       .then(response => {
-        model.setItems(response.items.map(i => response.base + i))
+        model.setItems(response.base, response.items)
       })
       .catch(() => {
         console.log("failed to fetch suggest for the path: " + path)
       })
     },
     
-    setItems: function(items) {
-      if (items.join("\n") == model.items.join("\n")) {
+    setItems: function(base, items) {
+      if (base == model.base && items.join("\n") == model.items.join("\n")) {
         return
       }
       model.setCursor(null)
+      model.base = base
       model.items = items
-      model.items_changed.dispatch(model.items)
+      model.items_changed.dispatch(model.items, model.base)
+    },
+    
+    getBase: function() {
+      return model.base
     },
     
     getItems: function() {
@@ -51,17 +57,23 @@ var FinderSuggest = function(finder) {
       model.cursor_moved.dispatch(model.cursor)
     },
     
+    getCursorIndex: function() {
+      return model.items.findIndex(function(item) {
+        return model.base + item == model.cursor
+      })
+    },
+    
     moveCursor: function(next) {
       if (model.cursor === null) {
         if (model.items.length != 0) {
-          model.setCursor(model.items[0])
+          model.setCursor(model.base + model.items[0])
         }
         return
       }
-      var idx = model.items.indexOf(model.cursor)
+      var idx = model.getCursorIndex()
       idx += next ? +1 : -1
       idx = Math.max(0, Math.min(model.items.length - 1, idx))
-      model.setCursor(model.items[idx])
+      model.setCursor(model.base + model.items[idx])
     },
     
     select: function(path) {

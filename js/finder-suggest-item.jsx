@@ -1,12 +1,9 @@
 const React = require("react")
 
-const name_rx = new RegExp("/([^/]*/?)$")
-
 const FinderSuggestItem = function(props) {
-  const name = name_rx.exec(props.path)[1]
   const onClick = (e) => {
     e.preventDefault()
-    props.onSelect(props.path)
+    props.onSelect(props.base + props.item)
   }
   const onMouseDown = (e) => {
     // prevent from getting focused
@@ -17,7 +14,7 @@ const FinderSuggestItem = function(props) {
       className={props.active ? "selected" : ""}
       onClick={onClick}
       onMouseDown={onMouseDown}>
-      {name}
+      {props.item}
     </a>
   )
 }
