@@ -31,6 +31,9 @@ class Finder extends React.Component {
     bindings.bind("mod+u", False(
       finder.goToParentDirectory
     ))
+    bindings.bind("mod+shift+u", False(
+      finder.goToProjectDirectory
+    ))
   }
   
   componentWillUnmount() {

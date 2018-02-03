@@ -3,6 +3,9 @@ $path = $_REQUEST["path"];
 if (substr($path, 0, 1) != "/") {
   $path = "/$path";
 }
+if (strpos($path, "/^/") !== false) {
+  $path = findProjectRoot($path);
+}
 if (strpos($path, "/~") !== false) {
   $reply = grep($path);
 }
@@ -14,6 +17,20 @@ else if (substr($path, -1) == "/") {
 }
 else {
   $reply = listFile($path);
+}
+
+function findProjectRoot($path)
+{
+  preg_match("#(.*?)/\\^/(.*)#", $path, $match);
+  list(, $start_dir, $file) = $match;
+  $dir = "";
+  foreach (explode("/", $start_dir) as $i) {
+    $dir .= "$i/";
+    if (is_dir("$dir.git")) {
+      return "$dir$file";
+    }
+  }
+  return "$start_dir/$file";
 }
 
 function grep($path)

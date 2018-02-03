@@ -47,6 +47,23 @@ var Finder = function() {
       )
     },
     
+    goToProjectDirectory: function() {
+      const path = model.path.replace(new RegExp("[^/]*$"), "") + "^/"
+      const body = new URLSearchParams()
+      body.set("path", path)
+      fetch("/finder.php", {
+        method: "POST",
+        body,
+      })
+      .then(response => response.json())
+      .then(response => {
+        model.setPath(response.base)
+      })
+      .catch(() => {
+        console.log("failed to fetch project directory: " + path)
+      })
+    },
+    
     enter: function() {
       var path = suggest.getCursor()
       model.select(path ? path : model.path)
