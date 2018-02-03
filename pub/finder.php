@@ -29,6 +29,7 @@ function grep($path)
   setlocale(LC_CTYPE, "ja_JP.UTF-8");
   chdir($dir);
   $cmd = "grep --recursive --files-with-match --extended-regexp ";
+  $cmd .= "--exclude-dir='.*' ";
   $cmd .= "--regexp=" . escapeshellarg($query);
   exec($cmd, $out);
   return [
