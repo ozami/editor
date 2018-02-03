@@ -48,6 +48,9 @@ function find($path)
       }
       $path = $dir . $i;
       if (is_dir($path)) {
+        if ($i[0] == ".") {
+          continue;
+        }
         $path .= "/";
         if (stripos($i, $query) !== false) {
           $matches[] = $path;
