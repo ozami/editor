@@ -267,6 +267,11 @@ main {
   padding: 0 3px;
   text-shadow: none;
 }
+.editor .CodeMirror-foldgutter-open,
+.editor .CodeMirror-foldgutter-folded {
+  margin-left: -2px;
+}
+
 .editor .CodeMirror-search-field {
   width: 50em !important;
 }
