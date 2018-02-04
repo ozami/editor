@@ -45,8 +45,18 @@ function grep($path)
   }
   setlocale(LC_CTYPE, "ja_JP.UTF-8");
   chdir($dir);
+  $includes = join(" ", array_map(
+    function($ext) {
+      return "--include='*.$ext'";
+    },
+    [
+      "php", "inc", "js", "jsx", "json",
+      "html", "htm", "xhtml", "xml", "txt",
+      "py", "sql", "sh",
+    ]
+  ));
   $cmd = "grep --recursive --files-with-match --extended-regexp ";
-  $cmd .= "--exclude-dir='.*' ";
+  $cmd .= "--exclude-dir='.*' $includes ";
   $cmd .= "--regexp=" . escapeshellarg($query);
   exec($cmd, $out);
   return [
