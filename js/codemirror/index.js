@@ -24,7 +24,6 @@ Object.assign(CodeMirror.defaults, {
   extraKeys: {
     "Ctrl-Space": "autocomplete",
     "Ctrl-U": "autocomplete",
-    "Ctrl-J": "joinLines",
     "Ctrl-/": "toggleComment",
     "Cmd-/": "toggleComment",
     "Tab": "indentAuto",
@@ -45,6 +44,7 @@ CodeMirror.defineInitHook(function(cm) {
     "alt+f": "goWordRight",
     "alt+h": "delWordBefore",
     "alt+d": "delWordAfter",
+    "mod+j": "joinLines",
     "mod+m": "mark",
     "mod+d": "selectWord",
     "mod+l": "selectLine",
