@@ -42,7 +42,7 @@ var FinderSuggest = function(finder) {
     },
     
     getItems: function() {
-      return model.items
+      return model.items.map(x => model.base + x)
     },
     
     getCursor: function() {
