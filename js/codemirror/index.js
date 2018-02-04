@@ -19,6 +19,8 @@ Object.assign(CodeMirror.defaults, {
   styleActiveLine: {nonEmpty: true},
   styleSelectedText: true,
   dragDrop: false,
+  foldGutter: true,
+  gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
   // Use solely anyword-hint
   hintOptions: {hint: CodeMirror.hint.anyword},
   extraKeys: {

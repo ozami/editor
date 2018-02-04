@@ -186,7 +186,7 @@ main {
 .editor .CodeMirror-gutters {
   background-color: white;
 }
-.editor .CodeMirror-gutter {
+.editor .CodeMirror-linenumbers {
   min-width: 3rem;
 }
 .editor .CodeMirror-linenumber {
@@ -255,6 +255,17 @@ main {
   border-radius: 2px;
   box-shadow: 0 0 0 1px #4784f1;
   color: #224;
+}
+.editor .CodeMirror-foldmarker {
+  border-radius: 3px;
+  background: #4784f1;
+  color: white;
+  font-family: inherit;
+  font-size: 80%;
+  line-height: 1;
+  margin: 0 3px;
+  padding: 0 3px;
+  text-shadow: none;
 }
 .editor .CodeMirror-search-field {
   width: 50em !important;
