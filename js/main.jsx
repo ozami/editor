@@ -15,8 +15,8 @@ const MainView = function(editor_mgr, finder) {
         <div id="editors">
           {editor_mgr.editors.map((model) => 
             <Editor
-    　　　　　　　key={model.getPath()}
-    　　　　　　　isActive={editor_mgr.active == model.getPath()}
+    　　　　　　　key={model.getFile().path.get()}
+    　　　　　　　isActive={editor_mgr.active == model.getFile().path.get()}
     　　　　　　　model={model} />
           )}
         </div>

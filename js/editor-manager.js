@@ -13,7 +13,7 @@ var EditorManager = function(finder) {
     
     getFiles: function() {
       return model.editors.map(function(editor) {
-        return editor.getPath()
+        return editor.getFile().path.get()
       })
     },
     
@@ -78,7 +78,7 @@ var EditorManager = function(finder) {
         idx += next ? +1 : -1
         idx = (idx + model.editors.length) % model.editors.length
       }
-      model.activate(model.editors[idx].getPath())
+      model.activate(model.editors[idx].getFile().path.get())
     },
     
     close: function(path) {

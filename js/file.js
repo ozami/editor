@@ -1,18 +1,16 @@
 var Observable = require("./observable")
+var Api = require("./api")
 var Eol = require("./eol")
 
 var File = function(path) {
   var file = {
     eol: Eol(),
     encoding: Observable(),
-    
-    getPath: function() {
-      return path
-    },
+    path: Observable(path),
     
     read: function() {
       const body = new URLSearchParams()
-      body.set("path", path)
+      body.set("path", file.path.get())
       
       return fetch("/read.php", {
         method: "POST",
@@ -30,20 +28,28 @@ var File = function(path) {
     },
     
     write: function(text) {
-      const body = new URLSearchParams()
-      body.set("path", path)
-      body.set("encoding", file.encoding.get())
-      body.set("content", text.replace(/\n/g, file.eol.get()))
-      
-      return fetch("/write.php", {
-        method: "post",
-        body,
-      })
-      .then(response => response.json())
-      .then(response => {
-        if (response != "ok") {
-          return Promise.reject(response.error)
-        }
+      return (new Api()).writeFile(
+        file.path.get(),
+        file.encoding.get(),
+        text.replace(/\n/g, file.eol.get())
+      )
+    },
+    
+    move: function(to_path, text) {
+      if (to_path == file.path.get()) {
+        return Promise.resolve("ok")
+      }
+      const api = new Api()
+      return api.writeFile(
+        to_path,
+        file.encoding.get(),
+        text.replace(/\n/g, file.eol.get())
+      ).then(function() {
+        return api.deleteFile(
+          file.path.get()
+        )
+      }).then(function() {
+        file.path.set(to_path)
       })
     },
   }

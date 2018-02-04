@@ -9,6 +9,7 @@ class FileTab extends React.Component {
   
   componentDidMount() {
     this.props.editor.status.observe(this.handleChange)
+    this.props.editor.getFile().path.observe(this.handleChange)
   }
   
   componentWillUnmount() {
@@ -21,12 +22,12 @@ class FileTab extends React.Component {
   
   handleClick(e) {
     e.preventDefault()
-    this.props.onClick(this.props.editor.getPath())
+    this.props.onClick(this.props.editor.getFile().path.get())
   }
   
   render() {
     const props = this.props
-    const path = props.editor.getPath()
+    const path = props.editor.getFile().path.get()
     const dir = path.replace(new RegExp("[^/]+$"), "")
     const name = path.replace(new RegExp(".*/"), "")
     return (
@@ -36,6 +37,11 @@ class FileTab extends React.Component {
         <div className="dir">{dir}</div>
         <div className="name">{name}</div>
         <div className={"status " + props.editor.status.get()}></div>
+        <div className="actions">
+          <button onClick={() => props.editor.move_file_dialog.show(props.editor.getFile().path.get())}>
+            Move
+          </button>
+        </div>
       </div>
     )
   }

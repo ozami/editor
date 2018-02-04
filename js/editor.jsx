@@ -2,6 +2,7 @@ const React = require("react")
 const CodeMirror = require("./codemirror.jsx")
 const SelectEncodingDialog = require("./select-encoding-dialog.jsx")
 const SelectModeDialog = require("./select-mode-dialog.jsx")
+const MoveFileDialog = require("./move-file-dialog.jsx")
 
 class Editor extends React.Component {
   constructor(props) {
@@ -33,6 +34,10 @@ class Editor extends React.Component {
     editor.select_encoding_dialog.confirmed.add(file.encoding.set)
     editor.select_encoding_dialog.visible.observe(this.handleChange)
     editor.select_encoding_dialog.encoding.observe(this.handleChange)
+    // file move
+    editor.move_file_dialog.confirmed.add(editor.move)
+    editor.move_file_dialog.visible.observe(this.handleChange)
+    editor.move_file_dialog.path.observe(this.handleChange)
   }
   
   render() {
@@ -70,6 +75,9 @@ class Editor extends React.Component {
         <SelectModeDialog
           model={model.select_mode_dialog}
           isOpen={model.select_mode_dialog.visible.get()} />
+        <MoveFileDialog
+          model={model.move_file_dialog}
+          isOpen={model.move_file_dialog.visible.get()} />
       </div>
     )
   }

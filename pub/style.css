@@ -155,6 +155,16 @@ main {
   background: #d30;
   border-color: #a10;
 }
+#files .file-item .actions {
+  display: none;
+  font-size: 10px;
+  position: absolute;
+  right: 0.5rem;
+  top: 0.5rem;
+}
+#files .file-item:hover .actions {
+  display: inline-block;
+}
 
 #editors {
   background: #eee;
@@ -342,4 +352,9 @@ main {
   letter-spacing: 1px;
   margin-bottom: 10px;
   width: 100%;
+}
+
+.move-file-dialog input {
+  font-size: inherit;
+  letter-spacing: 1px;
 }
