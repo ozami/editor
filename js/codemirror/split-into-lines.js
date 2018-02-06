@@ -8,6 +8,15 @@ CodeMirror.commands.splitIntoLines = function(cm) {
   }
   var anchor = selections[0].anchor
   var head = selections[0].head
+  if (anchor.line > head.line) {
+    var tmp = head
+    head = anchor
+    anchor = tmp
+  }
+  if (head.ch == 0) {
+    head.line -= 1
+    head.ch = Infinity
+  }
   var new_selections = []
   for (var i = anchor.line; i <= head.line; ++i) {
     new_selections.push({
