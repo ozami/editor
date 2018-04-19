@@ -108,7 +108,10 @@ function find($path)
 function listDir($path)
 {
   $dir = $path;
-  $items = scandir($path);
+  $items = @scandir($path);
+  if ($items === false) {
+    $items = [];
+  }
   $stats = array();
   foreach ($items as $i) {
     if ($i == "." || $i == "..") {
