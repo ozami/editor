@@ -198,7 +198,7 @@ main {
   border-bottom: 26px solid transparent;
 }
 .editor .CodeMirror pre {
-  font-family: "Source Han Code JP", monospace;
+  font-family: monospace;
   line-height: 1.8;
   color: #aaa;
 }
