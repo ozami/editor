@@ -1,5 +1,5 @@
 const fs = require("fs")
-const uglify = require("uglify-js")
+const uglify = require("uglify-es")
 
 const error = function(message) {
     console.log(message)

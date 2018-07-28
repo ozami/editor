@@ -1,6 +1,6 @@
 const fs = require("fs")
 const browserify = require("browserify")
-const uglify = require("uglify-js")
+const uglify = require("uglify-es")
 const uglifyify = require("uglifyify")
 
 const error = function(message) {

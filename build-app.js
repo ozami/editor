@@ -32,9 +32,8 @@ browserify({
     paths: ["./js", "./node_modules"],
 })
 .external(vendors)
-.transform(require("babelify"), {presets: ["es2015", "react"]})
+.transform(require("babelify"), {presets: ["react"]})
 .require("main", {expose: "app"})
-.require(["react", "react-dom"])
 .bundle(function(err, code) {
     if (err) {
         error(err)
