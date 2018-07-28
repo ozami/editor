@@ -27,10 +27,14 @@ const vendors = Object.keys(
 )
 vendors.push("codemirror-addon")
 
-browserify({debug: true})
+browserify({
+    debug: true,
+    paths: ["./js", "./node_modules"],
+})
 .external(vendors)
 .transform(require("babelify"), {presets: ["es2015", "react"]})
-.require("./js/main.js", {expose: "app"})
+.require("main", {expose: "app"})
+.require(["react", "react-dom"])
 .bundle(function(err, code) {
     if (err) {
         error(err)

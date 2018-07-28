@@ -1,6 +1,5 @@
 const fs = require("fs")
 const browserify = require("browserify")
-const envify = require("envify/custom")
 const uglify = require("uglify-js")
 const uglifyify = require("uglifyify")
 
@@ -17,7 +16,6 @@ const release = process.argv.indexOf("--release") != -1
 
 const b = browserify({debug: !release})
 if (release) {
-    b.transform(envify({_: "purge", NODE_ENV: "production"}), {global: true})
     b.transform(uglifyify, {global: true})
 }
 b.require(vendors)

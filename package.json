@@ -8,8 +8,6 @@
     "lodash.debounce": "^4.0.8",
     "lodash.foreach": "^4.5.0",
     "mousetrap": "^1.6.1",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
     "signals": "^1.0.0"
   },
   "devDependencies": {
@@ -17,7 +15,6 @@
     "babel-preset-react": "^6.24.1",
     "babelify": "^7.3.0",
     "browserify": "^14.5.0",
-    "envify": "^4.1.0",
     "uglify-js": "^3.3.4",
     "uglifyify": "^4.0.5"
   },
