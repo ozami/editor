@@ -7,7 +7,7 @@
     "codemirror": "^5.39.2",
     "lodash.debounce": "^4.0.8",
     "lodash.foreach": "^4.5.0",
-    "mousetrap": "^1.6.1",
+    "mousetrap": "^1.6.2",
     "signals": "^1.0.0"
   },
   "devDependencies": {
