@@ -1,8 +1,8 @@
 function Api() {
   function request(command, data) {
-    const body = new URLSearchParams()
+    const body = new FormData()
     for (let name in data) {
-      body.set(name, data[name])
+      body.append(name, data[name])
     }
     return fetch(`/${command}.php`, {
       method: "POST",

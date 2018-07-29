@@ -49,8 +49,8 @@ var Finder = function() {
     
     goToProjectDirectory: function() {
       const path = model.path.replace(new RegExp("[^/]*$"), "") + "^/"
-      const body = new URLSearchParams()
-      body.set("path", path)
+      const body = new FormData()
+      body.append("path", path)
       fetch("/finder.php", {
         method: "POST",
         body,

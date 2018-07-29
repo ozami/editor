@@ -12,8 +12,8 @@ var FinderSuggest = function(finder) {
     selected: new Signal(),
     
     update: function(path) {
-      const body = new URLSearchParams()
-      body.set("path", path)
+      const body = new FormData()
+      body.append("path", path)
       fetch("/finder.php", {
         method: "POST",
         body,
@@ -22,7 +22,8 @@ var FinderSuggest = function(finder) {
       .then(response => {
         model.setItems(response.base, response.items)
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err)
         console.log("failed to fetch suggest for the path: " + path)
       })
     },

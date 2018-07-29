@@ -9,8 +9,8 @@ var File = function(path) {
     path: Observable(path),
     
     read: function() {
-      const body = new URLSearchParams()
-      body.set("path", file.path.get())
+      const body = new FormData()
+      body.append("path", file.path.get())
       
       return fetch("/read.php", {
         method: "POST",
