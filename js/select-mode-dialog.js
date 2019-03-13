@@ -20,6 +20,7 @@ const SelectModeDialog = () => {
       "rust",
       "sass",
       "shell",
+      "slim",
       "toml",
       "text",
       "sql",
