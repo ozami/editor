@@ -19,6 +19,9 @@ Object.assign(CodeMirror.defaults, {
   styleActiveLine: {nonEmpty: true},
   styleSelectedText: true,
   dragDrop: false,
+  foldOptions: {
+    minFoldSize: 5,
+  },
   foldGutter: true,
   gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
   // Use solely anyword-hint
@@ -51,6 +54,7 @@ CodeMirror.defineInitHook(function(cm) {
     "mod+d": "selectWord",
     "mod+l": "selectLine",
     "mod+shift+l": "splitIntoLines",
+    "mod+shift+e": "toggleFold",
   }
   foreach(keymap, function(command, key) {
     Mousetrap(input).bind(key, function() {
