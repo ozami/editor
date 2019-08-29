@@ -6,6 +6,7 @@ require("./join-lines")
 require("./select-line")
 require("./select-word")
 require("./split-into-lines")
+require("./line-wrapping")
 require("./text-mode")
 
 Object.assign(CodeMirror.defaults, {
@@ -55,6 +56,7 @@ CodeMirror.defineInitHook(function(cm) {
     "mod+l": "selectLine",
     "mod+shift+l": "splitIntoLines",
     "mod+shift+e": "toggleFold",
+    "mod+shift+j": "toggleLineWrapping",
   }
   foreach(keymap, function(command, key) {
     Mousetrap(input).bind(key, function() {
