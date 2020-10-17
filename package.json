@@ -4,10 +4,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {
-    "codemirror": "^5.39.2",
+    "codemirror": "^5.58.1",
     "lodash.debounce": "^4.0.8",
     "lodash.foreach": "^4.5.0",
-    "mousetrap": "^1.6.2",
+    "mousetrap": "^1.6.5",
     "signals": "^1.0.0"
   },
   "devDependencies": {
@@ -15,7 +15,7 @@
     "babelify": "^7.3.0",
     "browserify": "^14.5.0",
     "uglify-es": "^3.3.9",
-    "uglifyify": "^4.0.5"
+    "uglifyify": "^5.0.2"
   },
   "scripts": {
     "build-vendor": "node build-vendor.js",
