@@ -8,6 +8,7 @@ require("./select-word")
 require("./split-into-lines")
 require("./line-wrapping")
 require("./text-mode")
+var hinter = require("./hinter")
 
 Object.assign(CodeMirror.defaults, {
   lineNumbers: true,
@@ -25,8 +26,7 @@ Object.assign(CodeMirror.defaults, {
   },
   foldGutter: true,
   gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-  // Use solely anyword-hint
-  hintOptions: {hint: CodeMirror.hint.anyword},
+  hintOptions: {hint: hinter},
   extraKeys: {
     "Ctrl-Space": "autocomplete",
     "Ctrl-U": "autocomplete",
