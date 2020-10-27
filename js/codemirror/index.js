@@ -17,7 +17,10 @@ Object.assign(CodeMirror.defaults, {
   autoCloseBrackets: true,
   matchBrackets: true,
   matchTags: true,
-  autoCloseTags: true,
+  autoCloseTags: {
+    whenClosing: true,
+    whenOpening: false,
+  },
   styleActiveLine: {nonEmpty: true},
   styleSelectedText: true,
   dragDrop: false,
