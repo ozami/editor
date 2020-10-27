@@ -108,6 +108,9 @@ module.exports = function(editor, options) {
       }
       return true
     })
+    words = words.map(function(word) {
+      return word.replace(/[^A-Za-z0-9]+$/, "")
+    })
     founds.push(...words)
   }
   editor.eachLine(0, cursor.line, searchInLine)
