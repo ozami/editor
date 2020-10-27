@@ -4,7 +4,7 @@ function makeApplyHintFunction(move_line, move_ch) {
   return function(code_mirror, self, data) {
     code_mirror.replaceRange(data.text, self.from, self.to)
     for (let x = 1; x < data.text.split("\n").length; ++x) {
-      code_mirror.indentLine(self.to.line + x)
+      code_mirror.indentLine(self.to.line + x, null, true)
     }
     code_mirror.setCursor(self.from.line + move_line, self.from.ch + move_ch)
   }
