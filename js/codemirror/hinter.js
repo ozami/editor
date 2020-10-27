@@ -12,7 +12,7 @@ function makeApplyHintFunction(move_line, move_ch) {
 
 const keywords = [
   // keyword, display text, insert text, hint function
-  ["function", "function {}", "function() {\n\n}", makeApplyHintFunction(0, 9)],
+  ["function", "function {}", "function() {\n\n}", makeApplyHintFunction(0, 8)],
   ["foreach", "foreach {}", "foreach () {\n\n}", makeApplyHintFunction(0, 9)],
   ["for", "for {}", "for () {\n\n}", makeApplyHintFunction(0, 5)],
   ["class", "class {}", "class  {\n\n}", makeApplyHintFunction(0, 6)],
@@ -52,7 +52,7 @@ const keywords = [
   "private",
   "protected",
   "static",
-  ["__construct", "__construct()", "__construct()", makeApplyHintFunction(0, 12)],
+  "__construct",
   ['id', 'id=""', 'id=""', makeApplyHintFunction(0, 4)],
   ['class', 'class=""', 'class=""', makeApplyHintFunction(0, 7)],
   ['style', 'style=""', 'style=""', makeApplyHintFunction(0, 7)],
