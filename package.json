@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {
-    "codemirror": "^5.58.1",
+    "codemirror": "^5.58.2",
     "lodash.debounce": "^4.0.8",
     "lodash.foreach": "^4.5.0",
     "mousetrap": "^1.6.5",
