@@ -59,6 +59,7 @@ CodeMirror.defineInitHook(function(cm) {
     "mod+l": "selectLine",
     "mod+shift+l": "splitIntoLines",
     "mod+shift+e": "toggleFold",
+    "mod+alt+e": "foldAll",
     "mod+shift+j": "toggleLineWrapping",
   }
   foreach(keymap, function(command, key) {
