@@ -54,6 +54,8 @@ var Editor = function(file) {
     var mode = {
       html: "php",
       tag: "php",
+      scss: "text/x-scss",
+      json: "application/json",
     }[extension]
     if (mode) {
       return mode
