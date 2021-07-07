@@ -21,6 +21,7 @@ const SelectModeDialog = () => {
       "sass",
       "shell",
       "slim",
+      "smarty",
       "toml",
       "text",
       "sql",
